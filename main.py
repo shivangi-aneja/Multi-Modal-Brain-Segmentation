@@ -2,8 +2,8 @@ import os
 
 import tensorflow as tf
 
-from proposed_model.model import model
-from proposed_model.test import test
+from model import model
+from test import test
 
 # Define flags
 flags = tf.app.flags
