@@ -24,7 +24,7 @@ flags.DEFINE_integer("number_train_images", 4, "No. of labeled images for traini
 flags.DEFINE_integer("number_train_unlab_images", 4, "No. of unlabeled images for training")
 flags.DEFINE_integer("number_test_images", 2, "No. of images for testing")
 
-flags.DEFINE_string("data_directory", "../data/mrbrains", "Directory name containing the dataset")
+flags.DEFINE_string("data_directory", "data/mrbrains", "Directory name containing the dataset")
 flags.DEFINE_string("checkpoint_dir", "checkpoint/current", "Directory name to save the checkpoints [checkpoint]")
 flags.DEFINE_string("best_checkpoint_dir", "checkpoint/best",
                     "Directory name to save the best checkpoints [checkpoint]")
