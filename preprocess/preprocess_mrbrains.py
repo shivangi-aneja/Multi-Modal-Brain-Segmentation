@@ -15,20 +15,20 @@ F = tf.app.flags.FLAGS
 seed = 7
 np.random.seed(seed)
 
-all_modalities = {'T1', 'T2'}
+all_modalities = {'FLAIR', 'reg_T1'}
 
 
 def get_filename(set_name, case_idx, input_name, loc):
-    pattern = '{0}/{1}/{3}/subject-{2}-{3}.nii'
+    pattern = '{0}/{1}/{2}/{3}.nii.gz'
     return pattern.format(loc, set_name, case_idx, input_name)
 
 
-def get_set_name(case_idx):
-    return 'Training' if case_idx < 11 else 'Testing'
+# def get_set_name(case_idx):
+#     return 'Training' if case_idx < 11 else 'Testing'
 
 
-def read_data(case_idx, input_name, loc):
-    set_name = get_set_name(case_idx)
+def read_data(case_idx, input_name, loc,set_name):
+    #set_name = get_set_name(case_idx)
 
     image_path = get_filename(set_name, case_idx, input_name, loc)
     print(image_path)
@@ -36,8 +36,8 @@ def read_data(case_idx, input_name, loc):
     return nib.load(image_path)
 
 
-def read_vol(case_idx, input_name, dir):
-    image_data = read_data(case_idx, input_name, dir)
+def read_vol(case_idx, input_name, dir,mode):
+    image_data = read_data(case_idx, input_name, dir,mode)
     return image_data.get_data()
 
 
@@ -49,8 +49,8 @@ def correct_bias(in_file, out_file):
     return done.outputs.output_image
 
 
-def normalise(case_idx, input_name, in_dir, out_dir, copy=False):
-    set_name = get_set_name(case_idx)
+def normalise(case_idx, input_name, in_dir, out_dir,set_name, copy=False):
+    #set_name = get_set_name(case_idx)
     image_in_path = get_filename(set_name, case_idx, input_name, in_dir)
     image_out_path = get_filename(set_name, case_idx, input_name, out_dir)
     if copy:
@@ -93,20 +93,20 @@ To extract labeled patches from array of 3D labeled images
 """
 
 
-def get_patches_lab(T1_vols, T2_vols, label_vols, extraction_step,
+def get_patches_lab(FLAIR_vols, reg_T1_vols, label_vols, extraction_step,
                     patch_shape, validating, testing, num_images_training):
     patch_shape_1d = patch_shape[0]
     # Extract patches from input volumes and ground truth
     x = np.zeros((0, patch_shape_1d, patch_shape_1d, patch_shape_1d, 2), dtype="float32")
     y = np.zeros((0, patch_shape_1d, patch_shape_1d, patch_shape_1d), dtype="uint8")
-    for idx in range(len(T1_vols)):
+    for idx in range(len(FLAIR_vols)):
         y_length = len(y)
         if testing:
-            print(("Extracting Patches from Image %2d ....") % (num_images_training + idx + 2))
+            print(("Extracting Patches from Labelled Image %2d ....") % (num_images_training + idx + 2))
         elif validating:
-            print(("Extracting Patches from Image %2d ....") % (num_images_training + idx + 1))
+            print(("Extracting Patches from Labelled Image %2d ....") % (num_images_training + idx + 1))
         else:
-            print(("Extracting Patches from Image %2d ....") % (1 + idx))
+            print(("Extracting Patches from Labelled Image %2d ....") % (1 + idx))
         label_patches = extract_patches(label_vols[idx], patch_shape, extraction_step,
                                         datype="uint8")
 
@@ -127,12 +127,12 @@ def get_patches_lab(T1_vols, T2_vols, label_vols, extraction_step,
         y[y_length:, :, :, :] = label_patches
 
         # Sampling strategy: reject samples which labels are mostly 0 and have less than 6000 nonzero elements
-        T1_train = extract_patches(T1_vols[idx], patch_shape, extraction_step, datype="float32")
-        x[y_length:, :, :, :, 0] = T1_train[valid_idxs]
+        FLAIR_train = extract_patches(FLAIR_vols[idx], patch_shape, extraction_step, datype="float32")
+        x[y_length:, :, :, :, 0] = FLAIR_train[valid_idxs]
 
         # Sampling strategy: reject samples which labels are mostly 0 and have less than 6000 nonzero elements
-        T2_train = extract_patches(T2_vols[idx], patch_shape, extraction_step, datype="float32")
-        x[y_length:, :, :, :, 1] = T2_train[valid_idxs]
+        reg_T1_train = extract_patches(reg_T1_vols[idx], patch_shape, extraction_step, datype="float32")
+        x[y_length:, :, :, :, 1] = reg_T1_train[valid_idxs]
     return x, y
 
 
@@ -141,53 +141,67 @@ To preprocess the labeled training data
 """
 
 
-def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_images_training=2,
-                           validating=False, testing=False, num_images_testing=7):
+def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_images_training=4,
+                           validating=False, testing=False, num_images_testing=2):
+    train_idx = [1, 4, 5, 70]
+    val_idx = [148]
+    test_idx = [7, 14]
+    cases = None
+    mode = None
+
     if testing:
         print("Testing")
         r1 = num_images_training + 2
         r2 = num_images_training + num_images_testing + 2
         c = num_images_training + 1
-        T1_vols = np.empty((num_images_testing, 144, 192, 256), dtype="float32")
-        T2_vols = np.empty((num_images_testing, 144, 192, 256), dtype="float32")
-        label_vols = np.empty((num_images_testing, 144, 192, 256), dtype="uint8")
+        FLAIR_vols = np.empty((num_images_testing, 240, 240,48), dtype="float32")
+        reg_T1_vols = np.empty((num_images_testing, 240, 240,48), dtype="float32")
+        label_vols = np.empty((num_images_testing, 240, 240,48), dtype="uint8")
+        mode = 'test'
     elif validating:
         print("Validating")
         r1 = num_images_training + 1
         r2 = num_images_training + 2
         c = num_images_training
-        T1_vols = np.empty((1, 144, 192, 256), dtype="float32")
-        T2_vols = np.empty((1, 144, 192, 256), dtype="float32")
-        label_vols = np.empty((1, 144, 192, 256), dtype="uint8")
+        FLAIR_vols = np.empty((1, 240, 240,48), dtype="float32")
+        reg_T1_vols = np.empty((1, 240, 240,48), dtype="float32")
+        label_vols = np.empty((1, 240, 240,48), dtype="uint8")
+        mode = 'val'
     else:
         print("Training")
         r1 = 1
         r2 = num_images_training + 1
         c = 0
-        T1_vols = np.empty((num_images_training, 144, 192, 256), dtype="float32")
-        T2_vols = np.empty((num_images_training, 144, 192, 256), dtype="float32")
-        label_vols = np.empty((num_images_training, 144, 192, 256), dtype="uint8")
+        FLAIR_vols = np.empty((num_images_training,240, 240,48), dtype="float32")
+        reg_T1_vols = np.empty((num_images_training, 240, 240,48), dtype="float32")
+        label_vols = np.empty((num_images_training, 240, 240,48), dtype="uint8")
+        mode = 'train'
+        cases = train_idx
+
+
+    iter = 0
     for case_idx in range(r1, r2):
         print(case_idx)
-        T1_vols[(case_idx - c - 1), :, :, :] = read_vol(case_idx, 'T1', dir)
-        T2_vols[(case_idx - c - 1), :, :, :] = read_vol(case_idx, 'T2', dir)
-        label_vols[(case_idx - c - 1), :, :, :] = read_vol(case_idx, 'label', dir)
-    T1_mean = T1_vols.mean()
-    T1_std = T1_vols.std()
-    T1_vols = (T1_vols - T1_mean) / T1_std
-    T2_mean = T2_vols.mean()
-    T2_std = T2_vols.std()
-    T2_vols = (T2_vols - T2_mean) / T2_std
+        FLAIR_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'FLAIR', dir,mode)
+        reg_T1_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'reg_T1', dir,mode)
+        label_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'segm', dir,mode)
+        iter += 1
+    FLAIR_mean = FLAIR_vols.mean()
+    FLAIR_std = FLAIR_vols.std()
+    FLAIR_vols = (FLAIR_vols - FLAIR_mean) / FLAIR_std
+    reg_T1_mean = reg_T1_vols.mean()
+    reg_T1_std = reg_T1_vols.std()
+    reg_T1_vols = (reg_T1_vols - reg_T1_mean) / reg_T1_std
 
-    for i in range(T1_vols.shape[0]):
-        T1_vols[i] = ((T1_vols[i] - np.min(T1_vols[i])) /
-                      (np.max(T1_vols[i]) - np.min(T1_vols[i]))) * 255
-    for i in range(T2_vols.shape[0]):
-        T2_vols[i] = ((T2_vols[i] - np.min(T2_vols[i])) /
-                      (np.max(T2_vols[i]) - np.min(T2_vols[i]))) * 255
-    T1_vols = T1_vols / 127.5 - 1.
-    T2_vols = T2_vols / 127.5 - 1.
-    x, y = get_patches_lab(T1_vols, T2_vols, label_vols, extraction_step, patch_shape, validating=validating,
+    for i in range(FLAIR_vols.shape[0]):
+        FLAIR_vols[i] = ((FLAIR_vols[i] - np.min(FLAIR_vols[i])) /
+                      (np.max(FLAIR_vols[i]) - np.min(FLAIR_vols[i]))) * 255
+    for i in range(reg_T1_vols.shape[0]):
+        reg_T1_vols[i] = ((reg_T1_vols[i] - np.min(reg_T1_vols[i])) /
+                      (np.max(reg_T1_vols[i]) - np.min(reg_T1_vols[i]))) * 255
+    FLAIR_vols = FLAIR_vols / 127.5 - 1.
+    reg_T1_vols = reg_T1_vols / 127.5 - 1.
+    x, y = get_patches_lab(FLAIR_vols, reg_T1_vols, label_vols, extraction_step, patch_shape, validating=validating,
                            testing=testing, num_images_training=num_images_training)
     print("Total Extracted Labelled Patches Shape:", x.shape, y.shape)
     if testing:
@@ -203,15 +217,15 @@ To extract labeled patches from array of 3D ulabeled images
 """
 
 
-def get_patches_unlab(T1_vols, T2_vols, extraction_step, patch_shape, dir):
+def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir):
     patch_shape_1d = patch_shape[0]
     # Extract patches from input volumes and ground truth
-    label_ref = np.empty((1, 144, 192, 256), dtype="uint8")
+    label_ref = np.empty((1, 240,240,48), dtype="uint8")
     x = np.zeros((0, patch_shape_1d, patch_shape_1d, patch_shape_1d, 2))
-    label_ref = read_vol(1, 'label', dir)
-    for idx in range(len(T1_vols)):
+    label_ref = read_vol(70, 'segm', dir,"train")
+    for idx in range(len(FLAIR_vols)):
         x_length = len(x)
-        print(("Processing the Image %2d ....") % (idx + 11))
+        print(("Processing the Image Unlabelled %2d ....") % (idx + 11))
         label_patches = extract_patches(label_ref, patch_shape, extraction_step)
 
         # Select only those who are important for processing
@@ -222,11 +236,11 @@ def get_patches_unlab(T1_vols, T2_vols, extraction_step, patch_shape, dir):
         x = np.vstack((x, np.zeros((len(label_patches), patch_shape_1d,
                                     patch_shape_1d, patch_shape_1d, 2))))
 
-        T1_train = extract_patches(T1_vols[idx], patch_shape, extraction_step, datype="float32")
-        x[x_length:, :, :, :, 0] = T1_train[valid_idxs]
+        FLAIR_train = extract_patches(FLAIR_vols[idx], patch_shape, extraction_step, datype="float32")
+        x[x_length:, :, :, :, 0] = FLAIR_train[valid_idxs]
 
-        T2_train = extract_patches(T2_vols[idx], patch_shape, extraction_step, datype="float32")
-        x[x_length:, :, :, :, 1] = T2_train[valid_idxs]
+        reg_T1_train = extract_patches(reg_T1_vols[idx], patch_shape, extraction_step, datype="float32")
+        x[x_length:, :, :, :, 1] = reg_T1_train[valid_idxs]
     return x
 
 
@@ -236,27 +250,28 @@ To preprocess the unlabeled training data
 
 
 def preprocess_dynamic_unlab(dir, extraction_step, patch_shape, num_images_training_unlab):
-    T1_vols = np.empty((num_images_training_unlab, 144, 192, 256), dtype="float32")
-    T2_vols = np.empty((num_images_training_unlab, 144, 192, 256), dtype="float32")
-    for case_idx in range(11, 11 + num_images_training_unlab):
-        T1_vols[(case_idx - 11), :, :, :] = read_vol(case_idx, 'T1', dir)
-        T2_vols[(case_idx - 11), :, :, :] = read_vol(case_idx, 'T2', dir)
+    FLAIR_vols = np.empty((num_images_training_unlab, 240, 240,48), dtype="float32")
+    reg_T1_vols = np.empty((num_images_training_unlab, 240, 240,48), dtype="float32")
+    cases = [0,2,4,6]
+    for case_idx in range(len(cases)):
+        FLAIR_vols[case_idx, :, :, :] = read_vol(cases[case_idx], 'FLAIR', dir,"unlabelled")
+        reg_T1_vols[case_idx, :, :, :] = read_vol(cases[case_idx], 'T1', dir,"unlabelled")
         # print(read_vol(case_idx, 'T2', dir).shape)
-    T1_mean = T1_vols.mean()
-    T1_std = T1_vols.std()
-    T1_vols = (T1_vols - T1_mean) / T1_std
-    T2_mean = T2_vols.mean()
-    T2_std = T2_vols.std()
-    T2_vols = (T2_vols - T2_mean) / T2_std
-    for i in range(T1_vols.shape[0]):
-        T1_vols[i] = ((T1_vols[i] - np.min(T1_vols[i])) /
-                      (np.max(T1_vols[i]) - np.min(T1_vols[i]))) * 255
-    for i in range(T2_vols.shape[0]):
-        T2_vols[i] = ((T2_vols[i] - np.min(T2_vols[i])) /
-                      (np.max(T2_vols[i]) - np.min(T2_vols[i]))) * 255
-    T1_vols = T1_vols / 127.5 - 1.
-    T2_vols = T2_vols / 127.5 - 1.
-    x = get_patches_unlab(T1_vols, T2_vols, extraction_step, patch_shape, dir)
+    FLAIR_mean = FLAIR_vols.mean()
+    FLAIR_std = FLAIR_vols.std()
+    FLAIR_vols = (FLAIR_vols - FLAIR_mean) / FLAIR_std
+    reg_T1_mean = reg_T1_vols.mean()
+    reg_T1_std = reg_T1_vols.std()
+    reg_T1_vols = (reg_T1_vols - reg_T1_mean) / reg_T1_std
+    for i in range(FLAIR_vols.shape[0]):
+        FLAIR_vols[i] = ((FLAIR_vols[i] - np.min(FLAIR_vols[i])) /
+                      (np.max(FLAIR_vols[i]) - np.min(FLAIR_vols[i]))) * 255
+    for i in range(reg_T1_vols.shape[0]):
+        reg_T1_vols[i] = ((reg_T1_vols[i] - np.min(reg_T1_vols[i])) /
+                      (np.max(reg_T1_vols[i]) - np.min(reg_T1_vols[i]))) * 255
+    FLAIR_vols = FLAIR_vols / 127.5 - 1.
+    reg_T1_vols = reg_T1_vols / 127.5 - 1.
+    x = get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir)
     print("Total Extracted Unlabelled Patches Shape:", x.shape)
     return x
 
@@ -272,16 +287,48 @@ def preprocess_static(org_dir, prepro_dir, dataset="labeled", overwrite=False):
             if not os.path.exists(new_subject_folder) or overwrite:
                 if not os.path.exists(new_subject_folder):
                     os.makedirs(new_subject_folder)
-    if (dataset == "labeled"):
-        for case_idx in range(1, 11):
-            normalise(case_idx, 'T1', org_dir, prepro_dir)
-            normalise(case_idx, 'T2', org_dir, prepro_dir)
-            normalise(case_idx, 'label', org_dir, prepro_dir,
+    if dataset == "train":
+            normalise(1, 'FLAIR', org_dir, prepro_dir,dataset)
+            normalise(1, 'reg_T1', org_dir, prepro_dir,dataset)
+            normalise(1, 'segm', org_dir, prepro_dir,dataset,
+                      copy=True)
+
+            normalise(4, 'FLAIR', org_dir, prepro_dir,dataset)
+            normalise(4, 'reg_T1', org_dir, prepro_dir,dataset)
+            normalise(4, 'segm', org_dir, prepro_dir,dataset,
+                      copy=True)
+
+            normalise(5, 'FLAIR', org_dir, prepro_dir,dataset)
+            normalise(5, 'reg_T1', org_dir, prepro_dir,dataset)
+            normalise(5, 'segm', org_dir, prepro_dir,dataset,
+                      copy=True)
+
+            normalise(70, 'FLAIR', org_dir, prepro_dir,dataset)
+            normalise(70, 'reg_T1', org_dir, prepro_dir,dataset)
+            normalise(70, 'segm', org_dir, prepro_dir,dataset,
+                      copy=True)
+
+    if dataset == "val":
+            normalise(148, 'FLAIR', org_dir, prepro_dir,dataset)
+            normalise(148, 'reg_T1', org_dir, prepro_dir,dataset)
+            normalise(148, 'segm', org_dir, prepro_dir,dataset,
+                      copy=True)
+
+
+    if dataset == "test":
+            normalise(7, 'FLAIR', org_dir, prepro_dir,dataset)
+            normalise(7, 'reg_T1', org_dir, prepro_dir,dataset)
+            normalise(7, 'segm', org_dir, prepro_dir,dataset,
+                      copy=True)
+
+            normalise(14, 'FLAIR', org_dir, prepro_dir,dataset)
+            normalise(14, 'reg_T1', org_dir, prepro_dir,dataset)
+            normalise(14, 'segm', org_dir, prepro_dir,dataset,
                       copy=True)
     else:
         for case_idx in range(11, 24):
-            normalise(case_idx, 'T1', org_dir, prepro_dir)
-            normalise(case_idx, 'T2', org_dir, prepro_dir)
+            normalise(case_idx, 'T1', org_dir, prepro_dir,dataset)
+            normalise(case_idx, 'T2', org_dir, prepro_dir,dataset)
 
 
 """
@@ -351,3 +398,11 @@ class dataset_badGAN(object):
                   self.label[i * self.batch_size:(i + 1) * self.batch_size]
 
 # preprocess_static( actual_data_directory, preprocesses_data_directory, overwrite=True)
+
+# For labelled data
+# preprocess_static(org_dir="../data/mrbrains",prepro_dir= "../data/mrbrains_preprocessed",dataset="train", overwrite=True)
+# preprocess_static(org_dir="../data/mrbrains",prepro_dir= "../data/mrbrains_preprocessed",dataset="val", overwrite=True)
+# preprocess_static(org_dir="../data/mrbrains",prepro_dir= "../data/mrbrains_preprocessed",dataset="test", overwrite=True)
+#
+# # For unlabelled data
+# preprocess_static(org_dir="../data/iSEG",prepro_dir= "../data/iSEG_preprocessed",dataset="unlabelled", overwrite=True)

@@ -9,7 +9,7 @@ import sys
 
 from lib.operations import *
 from lib.utils import *
-from preprocess.preprocess import *
+from preprocess.preprocess_mrbrains import *
 import numpy as np
 from six.moves import xrange
 from sklearn.metrics import f1_score
@@ -336,7 +336,7 @@ class model(object):
                                                                         np.max(predictions_val))
 
       # To stitch back the patches into an entire image
-      val_image_pred = recompose3D_overlap(predictions_val,144, 192, 256, self.extraction_step[0],
+      val_image_pred = recompose3D_overlap(predictions_val,240, 240, 48, self.extraction_step[0],
                                          self.extraction_step[1], self.extraction_step[2])
       val_image_pred = val_image_pred.astype('uint8')
 
@@ -346,16 +346,21 @@ class model(object):
                                                 np.mean(val_image_pred),np.mean(labels_val))
 
 
-      pred2d=np.reshape(val_image_pred,(val_image_pred.shape[0]*144*192*256))
-      lab2d=np.reshape(labels_val,(labels_val.shape[0]*144*192*256))
+      pred2d=np.reshape(val_image_pred,(val_image_pred.shape[0]*240*240*48))
+      lab2d=np.reshape(labels_val,(labels_val.shape[0]*240*240*48))
 
       # For printing the validation results
-      F1_score = f1_score(lab2d, pred2d,[0,1,2,3],average=None)
+      F1_score = f1_score(lab2d, pred2d,[0,1,2,3,4,5,6,7,8],average=None)
       print("Validation Dice Coefficient.... ")
       print("Background:",F1_score[0])
-      print("CSF:",F1_score[1])
-      print("GM:",F1_score[2])
-      print("WM:",F1_score[3])
+      print("Cortical Gray Matter:",F1_score[1])
+      print("Basal ganglia:",F1_score[2])
+      print("White matter:",F1_score[3])
+      print("White matter lesions:",F1_score[4])
+      print("Cerebrospinal fluid in the extracerebral space:",F1_score[5])
+      print("Ventricles:",F1_score[6])
+      print("Cerebellum:",F1_score[7])
+      print("Brain stem:",F1_score[8])
 
       # To Save the best model
       if(max_par<(F1_score[2]+F1_score[3])):

@@ -20,11 +20,11 @@ flags.DEFINE_float("tlw", 0.5, "True loss weight")
 flags.DEFINE_float("flw", 0.5, "Fake loss weight")
 flags.DEFINE_float("vi_weight", 0.01, "Weight of variational inference loss")
 
-flags.DEFINE_integer("number_train_images", 1, "No. of labeled images for training")
-flags.DEFINE_integer("number_train_unlab_images", 1, "No. of unlabeled images for training")
+flags.DEFINE_integer("number_train_images", 4, "No. of labeled images for training")
+flags.DEFINE_integer("number_train_unlab_images", 4, "No. of unlabeled images for training")
 flags.DEFINE_integer("number_test_images", 2, "No. of images for testing")
 
-flags.DEFINE_string("data_directory", "../data/iSEG_preprocessed", "Directory name containing the dataset")
+flags.DEFINE_string("data_directory", "../data/mrbrains", "Directory name containing the dataset")
 flags.DEFINE_string("checkpoint_dir", "checkpoint/current", "Directory name to save the checkpoints [checkpoint]")
 flags.DEFINE_string("best_checkpoint_dir", "checkpoint/best",
                     "Directory name to save the best checkpoints [checkpoint]")
@@ -38,7 +38,7 @@ flags.DEFINE_boolean("badGAN", False, "True if you want to run badGAN based mode
 flags.DEFINE_integer("batch_size", 30, "The size of batch images [64]")
 
 flags.DEFINE_integer("num_mod", 2, "Number of modalities of the input 3-D image")
-flags.DEFINE_integer("num_classes", 4, "Number of output classes to segment")
+flags.DEFINE_integer("num_classes", 9, "Number of output classes to segment")
 flags.DEFINE_integer("noise_dim", 200, "Dimension of noise vector")
 
 FLAGS = flags.FLAGS
