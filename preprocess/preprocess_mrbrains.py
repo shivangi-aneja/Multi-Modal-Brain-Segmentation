@@ -158,6 +158,7 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
         reg_T1_vols = np.empty((num_images_testing, 240, 240,48), dtype="float32")
         label_vols = np.empty((num_images_testing, 240, 240,48), dtype="uint8")
         mode = 'test'
+        cases = test_idx
     elif validating:
         print("Validating")
         r1 = num_images_training + 1
@@ -167,6 +168,7 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
         reg_T1_vols = np.empty((1, 240, 240,48), dtype="float32")
         label_vols = np.empty((1, 240, 240,48), dtype="uint8")
         mode = 'val'
+        cases = val_idx
     else:
         print("Training")
         r1 = 1
