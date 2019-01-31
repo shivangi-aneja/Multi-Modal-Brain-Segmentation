@@ -5,6 +5,7 @@ from sklearn.metrics import f1_score
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
+from eval.evaluation_metric import evaluate_stats
 
 # sys.path.insert(0, '../preprocess/')
 # sys.path.insert(0, '../lib/')
@@ -156,5 +157,9 @@ def test(patch_shape, extraction_step):
             print("Ventricles:", F1_score[6])
             print("Cerebellum:", F1_score[7])
             print("Brain stem:", F1_score[8])
+
+            evaluate_stats(gt_mask=labels_test, pred_mask=images_pred, count=images_pred.shape[0])
+
+
 
     return
