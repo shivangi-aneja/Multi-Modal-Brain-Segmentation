@@ -6,7 +6,7 @@ from sklearn.metrics import f1_score
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
-from logging.tf_logger import Logger
+from tf_logging.tf_logger import Logger
 
 
 F = tf.app.flags.FLAGS
