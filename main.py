@@ -15,12 +15,13 @@ flags.DEFINE_float("beta1D", 0.5, "Momentum term of Adam optimizer for Discrimin
 flags.DEFINE_float("beta1G", 0.5, "Momentum term of Adam optimizer for Generator (default: 0.5)")
 flags.DEFINE_float("beta1E", 0.5, "Momentum term of Adam optimizer for Encoder (default: 0.5)")
 
-flags.DEFINE_float("gpu_frac", 0.95, "Gpu fraction")
+flags.DEFINE_float("gpu_frac", 1.0, "Gpu fraction")
 flags.DEFINE_float("tlw", 0.5, "True loss weight")
 flags.DEFINE_float("flw", 0.5, "Fake loss weight")
 flags.DEFINE_float("vi_weight", 0.01, "Weight of variational inference loss")
 
 flags.DEFINE_integer("number_train_images", 4, "No. of labeled images for training")
+flags.DEFINE_integer("gpu", 0, "GPU id")
 flags.DEFINE_integer("number_train_unlab_images", 4, "No. of unlabeled images for training")
 flags.DEFINE_integer("number_test_images", 2, "No. of images for testing")
 
@@ -42,6 +43,9 @@ flags.DEFINE_integer("num_classes", 9, "Number of output classes to segment")
 flags.DEFINE_integer("noise_dim", 200, "Dimension of noise vector")
 
 FLAGS = flags.FLAGS
+
+os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 def main(_):
