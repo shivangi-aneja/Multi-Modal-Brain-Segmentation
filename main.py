@@ -1,7 +1,7 @@
 import os
 
 import tensorflow as tf
-
+import pprint
 from model import model
 from test import test
 
@@ -26,7 +26,9 @@ flags.DEFINE_integer("number_train_unlab_images", 4, "No. of unlabeled images fo
 flags.DEFINE_integer("number_test_images", 2, "No. of images for testing")
 
 flags.DEFINE_string("data_directory", "data/mrbrains", "Directory name containing the dataset")
+flags.DEFINE_string("dataset", "mrbrains", "Dataset name")
 flags.DEFINE_string("checkpoint_dir", "checkpoint/current", "Directory name to save the checkpoints [checkpoint]")
+flags.DEFINE_string("tf_logs", "tf_logs/", "Directory name to save tensorflow logs")
 flags.DEFINE_string("best_checkpoint_dir", "checkpoint/best",
                     "Directory name to save the best checkpoints [checkpoint]")
 flags.DEFINE_string("results_dir", "results/", "Directory name to save the results [results]")
@@ -47,6 +49,11 @@ FLAGS = flags.FLAGS
 os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+pprint.pprint("Running with the following parameters:")
+parameter_value_map = {}
+for key in FLAGS.__flags.keys():
+  parameter_value_map[key] = FLAGS.__flags[key].value
+print("Parameters: {}".format(parameter_value_map))
 
 def main(_):
     # Create required directories

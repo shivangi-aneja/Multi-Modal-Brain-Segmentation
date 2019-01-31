@@ -1,15 +1,12 @@
 from __future__ import division
 
-import numpy as np
 from six.moves import xrange
 from sklearn.metrics import f1_score
 
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
-
-# sys.path.insert(0, '../preprocess/')
-# sys.path.insert(0, '../lib/')
+from logging.tf_logger import Logger
 
 
 F = tf.app.flags.FLAGS
@@ -215,6 +212,8 @@ class model(object):
     """
 
     def train(self):
+        # Instantiate tensorflow logger
+        self.logger = Logger(model_name='mr_brain', data_name=F.dataset, log_path="tf_logs/"+F.tf_logs)
 
         # Instantiate the dataset class
         data = dataset_badGAN(num_classes=F.num_classes, extraction_step=self.extraction_step,
@@ -299,12 +298,12 @@ class model(object):
                 if F.badGAN:
                     vi_loss = self.vi_loss.eval(feed_dict)
                     print((
-                              "Epoch:[%2d] [%4d/%4d] Labeled loss:%.2e Unlabeled loss:%.2e Fake loss:%.2e Generator FM loss:%.8f Generator VI loss:%.8f\n") %
+                              "Epoch:[%2d] [%4d/%4d] Labeled loss:%.4f Unlabeled loss:%.4f Fake loss:%.4f Generator FM loss:%.8f Generator VI loss:%.8f\n") %
                           (epoch, idx, data.num_batches, d_loss_lab, d_loss_unlab_true, d_loss_unlab_fake, g_loss_fm,
                            vi_loss))
                 else:
                     print((
-                              "Epoch:[%2d] [%4d/%4d] Labeled loss:%.2e Unlabeled loss:%.2e Fake loss:%.2e Generator loss:%.8f \n") %
+                              "Epoch:[%2d] [%4d/%4d] Labeled loss:%.4f Unlabeled loss:%.4f Fake loss:%.4f Generator loss:%.8f \n") %
                           (epoch, idx, data.num_batches, d_loss_lab, d_loss_unlab_true, d_loss_unlab_fake, g_loss_fm))
 
             # Save the curret model
@@ -375,14 +374,20 @@ class model(object):
 
             # To save the losses for plotting
             print("Average Validation Loss:", avg_val_loss)
-            with open('Val_loss_GAN.txt', 'a') as f:
-                f.write('%.2e \n' % avg_val_loss)
-            with open('Train_loss_CE.txt', 'a') as f:
-                f.write('%.2e \n' % avg_train_loss_CE)
-            with open('Train_loss_UL.txt', 'a') as f:
-                f.write('%.2e \n' % avg_train_loss_UL)
-            with open('Train_loss_FK.txt', 'a') as f:
-                f.write('%.2e \n' % avg_train_loss_FK)
-            with open('Train_loss_FM.txt', 'a') as f:
-                f.write('%.2e \n' % avg_gen_FMloss)
+            self.logger.log_loss(mode='val_loss', loss=avg_val_loss, epoch=epoch + 1)
+            self.logger.log_loss(mode='train_ce', loss=avg_train_loss_CE, epoch=epoch + 1)
+            self.logger.log_loss(mode='train_ul', loss=avg_train_loss_UL, epoch=epoch + 1)
+            self.logger.log_loss(mode='train_fk', loss=avg_train_loss_FK, epoch=epoch + 1)
+            self.logger.log_loss(mode='train_fm', loss=avg_gen_FMloss, epoch=epoch + 1)
+
+            # with open('Val_loss_GAN.txt', 'a') as f:
+            #     f.write('%.2e \n' % avg_val_loss)
+            # with open('Train_loss_CE.txt', 'a') as f:
+            #     f.write('%.2e \n' % avg_train_loss_CE)
+            # with open('Train_loss_UL.txt', 'a') as f:
+            #     f.write('%.2e \n' % avg_train_loss_UL)
+            # with open('Train_loss_FK.txt', 'a') as f:
+            #     f.write('%.2e \n' % avg_train_loss_FK)
+            # with open('Train_loss_FM.txt', 'a') as f:
+            #     f.write('%.2e \n' % avg_gen_FMloss)
         return
