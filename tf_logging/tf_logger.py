@@ -21,18 +21,6 @@ class Logger:
         self.writer = SummaryWriter(log_dir=log_path, comment=self.comment)
 
 
-    def log(self, mode, d_error, g_error, epoch):
-
-        # var_class = torch.autograd.variable.Variable
-        if isinstance(d_error, torch.autograd.Variable):
-            d_error = d_error.data.cpu().numpy()
-        if isinstance(g_error, torch.autograd.Variable):
-            g_error = g_error.data.cpu().numpy()
-        self.writer.add_scalar(
-            '{}/D_error'.format(mode + '_' + self.comment), d_error, epoch)
-        self.writer.add_scalar(
-            '{}/G_error'.format(mode + '_' + self.comment), g_error, epoch)
-
     def log_acc(self, mode, acc, epoch):
 
         # var_class = torch.autograd.variable.Variable
@@ -49,7 +37,7 @@ class Logger:
             acc = loss.data.cpu().numpy()
 
         self.writer.add_scalar(
-            '{}/loss'.format(mode + '_' + self.comment), loss, epoch)
+            '{}_loss'.format(mode + '_' + self.comment), loss, epoch)
 
 
     def display_status(self, epoch, num_epochs, n_batch, num_batches, d_error, g_error, d_pred_real, d_pred_fake):

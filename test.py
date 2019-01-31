@@ -14,7 +14,6 @@ from lib.utils import *
 from preprocess.preprocess_mrbrains import *
 
 
-
 F = tf.app.flags.FLAGS
 
 
@@ -129,7 +128,7 @@ def test(patch_shape,extraction_step):
                                                                         np.max(predictions_test))
 
       # To stitch the image back
-      images_pred = recompose3D_overlap(predictions_test,144, 192, 256, extraction_step[0],
+      images_pred = recompose3D_overlap(predictions_test,240, 240, 48, extraction_step[0],
                                                         extraction_step[1],extraction_step[2])
 
       print("Shape of Predicted Output Groundtruth Images:",images_pred.shape,
@@ -139,21 +138,26 @@ def test(patch_shape,extraction_step):
 
       # To save the images
       for i in range(F.number_test_images):
-        pred2d=np.reshape(images_pred[i],(144*192*256))
-        lab2d=np.reshape(labels_test[i],(144*192*256))
+        pred2d=np.reshape(images_pred[i],(240*240*48))
+        lab2d=np.reshape(labels_test[i],(240*240*48))
         save_image(F.results_dir,images_pred[i],F.number_train_images+i+2)
 
 
       # Evaluation
-      pred2d=np.reshape(images_pred,(images_pred.shape[0]*144*192*256))
-      lab2d=np.reshape(labels_test,(labels_test.shape[0]*144*192*256))
+      pred2d=np.reshape(images_pred,(images_pred.shape[0]*240*240*48))
+      lab2d=np.reshape(labels_test,(labels_test.shape[0]*240*240*48))
 
-      F1_score = f1_score(lab2d, pred2d,[0,1,2,3],average=None)
+      F1_score = f1_score(lab2d, pred2d,[0, 1, 2, 3, 4, 5, 6, 7, 8],average=None)
       print("Testing Dice Coefficient.... ")
-      print("Background:",F1_score[0])
-      print("CSF:",F1_score[1])
-      print("GM:",F1_score[2])
-      print("WM:",F1_score[3])
+      print("Background:", F1_score[0])
+      print("Cortical Gray Matter:", F1_score[1])
+      print("Basal ganglia:", F1_score[2])
+      print("White matter:", F1_score[3])
+      print("White matter lesions:", F1_score[4])
+      print("Cerebrospinal fluid in the extracerebral space:", F1_score[5])
+      print("Ventricles:", F1_score[6])
+      print("Cerebellum:", F1_score[7])
+      print("Brain stem:", F1_score[8])
 
 
 
