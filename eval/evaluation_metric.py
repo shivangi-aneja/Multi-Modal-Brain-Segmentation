@@ -23,17 +23,44 @@ labels = {
           }
 
 
-def evaluate_stats(gt_mask, pred_mask, count):
+def evaluate_stats(test_idx):
 
-    for i in range(count):
-        dsc = getDSC(gt_mask[i],pred_mask[i])
-        h95 = getHausdorff(gt_mask[i],pred_mask[i])
-        vs = getVS(gt_mask[i],pred_mask[i])
+    for i in range(len(test_idx)):
+        test_filename = "../data/mrbrains/test/"+str(test_idx[i])+"/segm.nii.gz"
+        result_filename = "../results/result_"+str(test_idx[i])+".nii.gz"
+        test_file, result_file = getImages(test_filename,result_filename)
+        dsc = getDSC(test_file,result_file)
+        h95 = getHausdorff(test_file,result_file)
+        vs = getVS(test_file,result_file)
 
         print('Dice', dsc, '(higher is better, max=1)')
         print('HD', h95, 'mm', '(lower is better, min=0)')
         print('VS', vs, '(higher is better, max=1)')
 
+
+
+def getImages(testFilename, resultFilename):
+    """Return the test and result images, thresholded and pathology masked."""
+    testImage = sitk.ReadImage(testFilename)
+    resultImage = sitk.ReadImage(resultFilename)
+
+    # Check for equality
+    assert testImage.GetSize() == resultImage.GetSize()
+
+    # Get meta data from the test-image, needed for some sitk methods that check this
+    resultImage.CopyInformation(testImage)
+
+    # Remove pathology from the test and result images, since we don't evaluate on that
+    pathologyImage = sitk.BinaryThreshold(testImage, 9, 11, 0, 1)  # pathology == 9 or 10
+
+    maskedTestImage = sitk.Mask(testImage, pathologyImage)  # tissue    == 1 --  8
+    maskedResultImage = sitk.Mask(resultImage, pathologyImage)
+
+    # Force integer
+    if not 'integer' in maskedResultImage.GetPixelIDTypeAsString():
+        maskedResultImage = sitk.Cast(maskedResultImage, sitk.sitkUInt8)
+
+    return maskedTestImage, maskedResultImage
 
 
 def getDSC(testImage, resultImage):
@@ -128,3 +155,7 @@ def getVS(testImage, resultImage):
             vs[k] = None
 
     return vs
+
+
+if __name__ == '__main__':
+    evaluate_stats(test_idx=[7, 14])

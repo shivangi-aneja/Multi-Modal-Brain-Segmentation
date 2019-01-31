@@ -17,7 +17,7 @@ F = tf.app.flags.FLAGS
 # Function to save predicted images as .nii.gz file in results folder
 def save_image(direc, i, num):
     img = nib.Nifti1Image(i, None)
-    imgname = 'outputimage_GANbasedunet_' + str(num) + '.nii.gz'
+    imgname = 'result_' + str(num) + '.nii.gz'
     nib.save(img, os.path.join(direc, imgname))
 
 
@@ -157,8 +157,6 @@ def test(patch_shape, extraction_step):
             print("Ventricles:", F1_score[6])
             print("Cerebellum:", F1_score[7])
             print("Brain stem:", F1_score[8])
-
-            evaluate_stats(gt_mask=labels_test, pred_mask=images_pred, count=images_pred.shape[0])
 
 
 
