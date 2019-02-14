@@ -128,16 +128,24 @@ class model(object):
     """
 
     def build_model(self):
+
+        # Placeholder for labelled patches
         self.patches_lab = tf.placeholder(tf.float32, [F.batch_size, self.patch_shape[0],
                                                        self.patch_shape[1], self.patch_shape[2], F.num_mod],
                                           name='real_images_l')
+
+        # Placeholder for unlabelled patches
         self.patches_unlab = tf.placeholder(tf.float32, [F.batch_size, self.patch_shape[0],
                                                          self.patch_shape[1], self.patch_shape[2], F.num_mod],
                                             name='real_images_unl')
 
+        # Placeholder for noise
         self.z_gen = tf.placeholder(tf.float32, [None, F.noise_dim], name='noise')
+
+        # Placeholder for labels
         self.labels = tf.placeholder(tf.uint8, [F.batch_size, self.patch_shape[0], self.patch_shape[1],
                                                 self.patch_shape[2]], name='image_labels')
+        # TODO : Figure out
         self.phase = tf.placeholder(tf.bool)
 
         # To make one hot of labels
@@ -148,10 +156,8 @@ class model(object):
 
         # Forward pass through network with different kinds of training patches
         self.D_logits_lab, self.D_probdist, _ = self.discriminator(self.patches_lab, reuse=False)
-        self.D_logits_unlab, _, self.features_unlab \
-            = self.discriminator(self.patches_unlab, reuse=True)
-        self.D_logits_fake, _, self.features_fake \
-            = self.discriminator(self.patches_fake, reuse=True)
+        self.D_logits_unlab, _, self.features_unlab = self.discriminator(self.patches_unlab, reuse=True)
+        self.D_logits_fake, _, self.features_fake = self.discriminator(self.patches_fake, reuse=True)
 
         # To obtain Validation Output
         self.Val_output = tf.argmax(self.D_probdist, axis=-1)
@@ -160,7 +166,7 @@ class model(object):
         # Weighted cross entropy loss (You can play with these values)
         # Weights of different class are: Background- 0.33, CSF- 1.5, GM- 0.83, WM- 1.33
         # class_weights = tf.constant([[0.33, 1.5, 0.83, 1.33]])
-        class_weights = tf.constant([[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,1.0]])
+        class_weights = tf.constant([[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]])
         weights = tf.reduce_sum(class_weights * self.labels_1hot, axis=-1)
         unweighted_losses = tf.nn.softmax_cross_entropy_with_logits_v2(logits=self.D_logits_lab,
                                                                        labels=self.labels_1hot)
@@ -170,6 +176,7 @@ class model(object):
         # Unsupervised loss
         self.unl_lsexp = tf.reduce_logsumexp(self.D_logits_unlab, -1)
         self.fake_lsexp = tf.reduce_logsumexp(self.D_logits_fake, -1)
+
         # Unlabeled loss
         self.true_loss = - F.tlw * tf.reduce_mean(self.unl_lsexp) + F.tlw * tf.reduce_mean(
             tf.nn.softplus(self.unl_lsexp))

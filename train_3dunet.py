@@ -1,9 +1,5 @@
-import os
-import pprint
-import tensorflow as tf
-
-from unet3D.model_unet import UNET
-from unet3D.testing_unet import *
+from model_config.model_3dunet import UNET
+from testing_unet import *
 
 
 # Define flags
@@ -12,16 +8,17 @@ flags.DEFINE_integer("epoch", 100000, "Number of training epochs (default: 10000
 flags.DEFINE_float("learning_rate_", 0.0001, "Learning rate of Adam optimizer for Discriminator (default: 0.0001)")
 flags.DEFINE_float("beta1", 0.9, "Momentum term of Adam optimizer for Discriminator (default: 0.5)")
 
-flags.DEFINE_float("gpu_frac", 0.95, "Gpu fraction")
+flags.DEFINE_float("gpu_frac", 1.0, "Gpu fraction")
 
+flags.DEFINE_integer("number_train_images", 4, "No. of labeled images for training")
+flags.DEFINE_integer("gpu", 0, "GPU id")
+flags.DEFINE_integer("number_test_images", 2, "No. of images for testing")
 
-flags.DEFINE_integer("number_train_images", 2, "No. of images for training")
-flags.DEFINE_integer("number_test_images", 1, "No. of images for testing")
-
-flags.DEFINE_string("data_directory", "../data/iSEG_preprocessed", "Directory name containing the preprocessed dataset")
-flags.DEFINE_string("checkpoint_dir", "checkpoint/current", "Directory name to save the checkpoints [checkpoint]")
-flags.DEFINE_string("best_checkpoint_dir", "checkpoint/best", "Directory name to save the best checkpoints [checkpoint]")
-flags.DEFINE_string("results_dir", "results/", "Directory name to save the results [results]")
+flags.DEFINE_string("data_directory", "data/mrbrains", "Directory name containing the dataset")
+flags.DEFINE_string("dataset", "mrbrains", "Dataset name")
+flags.DEFINE_string("checkpoint_dir", "checkpoint/3d_unet/current", "Directory name to save the checkpoints [checkpoint]")
+flags.DEFINE_string("best_checkpoint_dir", "checkpoint/3d_unet/best", "Directory name to save the best checkpoints [checkpoint]")
+flags.DEFINE_string("results_dir", "results/3d_unet/", "Directory name to save the results [results]")
 
 flags.DEFINE_boolean("load_chkpt", False, "True for loading saved checkpoint")
 flags.DEFINE_boolean("training", False, "True for Training ")
@@ -30,8 +27,8 @@ flags.DEFINE_boolean("testing", False, "True for Testing ")
 
 flags.DEFINE_integer("batch_size", 30, "The size of batch images(30 for data1 and 20 for data2")
 
-flags.DEFINE_integer("num_mod", 2, "Number of channels in input image(2 for data1 and 1 for data2)")
-flags.DEFINE_integer("num_classes", 4, "Number of output classes(4 for data1 and 15 for data2)")
+flags.DEFINE_integer("num_mod", 2, "Number of modalities of the input 3-D image")
+flags.DEFINE_integer("num_classes", 9, "Number of output classes to segment")
 
 FLAGS = flags.FLAGS
 
