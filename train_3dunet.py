@@ -19,6 +19,7 @@ flags.DEFINE_string("dataset", "mrbrains", "Dataset name")
 flags.DEFINE_string("checkpoint_dir", "checkpoint/3d_unet/current", "Directory name to save the checkpoints [checkpoint]")
 flags.DEFINE_string("best_checkpoint_dir", "checkpoint/3d_unet/best", "Directory name to save the best checkpoints [checkpoint]")
 flags.DEFINE_string("results_dir", "results/3d_unet/", "Directory name to save the results [results]")
+flags.DEFINE_string("tf_logs", "tf_logs/3d_unet/", "Directory name to save tensorflow logs")
 
 flags.DEFINE_boolean("load_chkpt", False, "True for loading saved checkpoint")
 flags.DEFINE_boolean("training", False, "True for Training ")
