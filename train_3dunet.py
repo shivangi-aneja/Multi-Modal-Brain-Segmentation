@@ -1,6 +1,6 @@
 from model_config.model_3dunet import UNET
 from testing_unet import *
-
+import pprint
 
 # Define flags
 flags = tf.app.flags
@@ -31,6 +31,15 @@ flags.DEFINE_integer("num_mod", 2, "Number of modalities of the input 3-D image"
 flags.DEFINE_integer("num_classes", 9, "Number of output classes to segment")
 
 FLAGS = flags.FLAGS
+
+os.environ['CUDA_VISIBLE_DEVICES'] = str(FLAGS.gpu)
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+pprint.pprint("Running with the following parameters:")
+parameter_value_map = {}
+for key in FLAGS.__flags.keys():
+  parameter_value_map[key] = FLAGS.__flags[key].value
+print("Parameters: {}".format(parameter_value_map))
 
 def main(_):
   # Create required directories
