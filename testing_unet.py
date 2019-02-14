@@ -6,12 +6,11 @@ import numpy as np
 from sklearn.metrics import f1_score
 
 import sys
-sys.path.insert(0, '../preprocess/')
-sys.path.insert(0, '../lib/')
+
 
 from lib.operations import *
 from lib.utils import *
-from preprocess.preprocess import *
+from preprocess.preprocess_mrbrains import *
 
 
 F = tf.app.flags.FLAGS
