@@ -18,10 +18,11 @@ F = tf.app.flags.FLAGS
 d_bns = [batch_norm(name='u_bn{}'.format(i,)) for i in range(14)]
 
 # Function to save predicted images as .nii.gz file in results folder
-def save_image(direc,i,num):
-  img = nib.Nifti1Image(i, None)
-  imgname = 'outputimage_unet_'+str(num)+'.nii.gz'
-  nib.save(img, os.path.join(direc,imgname))
+# Function to save predicted images as .nii.gz file in results folder
+def save_image(direc, i, num):
+    img = nib.Nifti1Image(i, None)
+    imgname = 'result_' + str(num) + '.nii.gz'
+    nib.save(img, os.path.join(direc, imgname))
 
 """
  Modified 3D U-Net 
