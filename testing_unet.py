@@ -50,10 +50,10 @@ def trained_network_dis(patch, reuse=False):
       h5 = lrelu(conv3d_WN(h4, 128, name='u_h5_conv'))
       p5 = avg_pool3D(h5)
 
-      h6 = lrelu(conv3d_WN(p5, 48, name='u_h6_conv'))
-      h7 = lrelu(conv3d_WN(h6, 48, name='u_h7_conv'))
+      h6 = lrelu(conv3d_WN(p5, 256, name='u_h6_conv'))
+      h7 = lrelu(conv3d_WN(h6, 256, name='u_h7_conv'))
 
-      up1 = deconv3d_WN(h7,48,name='u_up1_deconv')
+      up1 = deconv3d_WN(h7,256,name='u_up1_deconv')
       up1 = tf.concat([h5,up1],4)
       h8 = lrelu(conv3d_WN(up1, 128, name='u_h8_conv'))
       h9 = lrelu(conv3d_WN(h8, 128, name='u_h9_conv'))
@@ -104,8 +104,8 @@ def trained_network( patch, phase, pshape, reuse=None):
     h5 = relu(d_bns[5](conv3d(h4, 128, name='u_h5_conv'),phase))
     p5 = max_pool3D(h5)
 
-    h6 = relu(d_bns[6](conv3d(p5, 48, name='u_h6_conv'),phase))
-    h7 = relu(d_bns[7](conv3d(h6, 48, name='u_h7_conv'),phase))
+    h6 = relu(d_bns[6](conv3d(p5, 256, name='u_h6_conv'),phase))
+    h7 = relu(d_bns[7](conv3d(h6, 256, name='u_h7_conv'),phase))
 
     up1 = deconv3d(h7,[F.batch_size,sh1,sh1,sh1,48],name='d_up1_deconv')
     up1 = tf.concat([h5,up1],4)

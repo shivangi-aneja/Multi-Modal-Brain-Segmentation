@@ -4,7 +4,7 @@ import pprint
 
 # Define flags
 flags = tf.app.flags
-flags.DEFINE_integer("epoch", 100000, "Number of training epochs (default: 100000)")
+flags.DEFINE_integer("epoch", 300, "Number of training epochs (default: 300)")
 flags.DEFINE_float("learning_rate_", 0.0001, "Learning rate of Adam optimizer for Discriminator (default: 0.0001)")
 flags.DEFINE_float("beta1", 0.9, "Momentum term of Adam optimizer for Discriminator (default: 0.5)")
 

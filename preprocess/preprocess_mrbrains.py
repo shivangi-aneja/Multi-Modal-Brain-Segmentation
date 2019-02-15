@@ -215,7 +215,7 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
 
 
 """
-To extract labeled patches from array of 3D ulabeled images
+To extract labeled patches from array of 3D unlabeled images
 """
 
 
