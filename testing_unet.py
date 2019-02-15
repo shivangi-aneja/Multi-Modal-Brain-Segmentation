@@ -50,10 +50,10 @@ def trained_network_dis(patch, reuse=False):
       h5 = lrelu(conv3d_WN(h4, 128, name='u_h5_conv'))
       p5 = avg_pool3D(h5)
 
-      h6 = lrelu(conv3d_WN(p5, 256, name='u_h6_conv'))
-      h7 = lrelu(conv3d_WN(h6, 256, name='u_h7_conv'))
+      h6 = lrelu(conv3d_WN(p5, 48, name='u_h6_conv'))
+      h7 = lrelu(conv3d_WN(h6, 48, name='u_h7_conv'))
 
-      up1 = deconv3d_WN(h7,256,name='u_up1_deconv')
+      up1 = deconv3d_WN(h7,48,name='u_up1_deconv')
       up1 = tf.concat([h5,up1],4)
       h8 = lrelu(conv3d_WN(up1, 128, name='u_h8_conv'))
       h9 = lrelu(conv3d_WN(h8, 128, name='u_h9_conv'))
@@ -104,10 +104,10 @@ def trained_network( patch, phase, pshape, reuse=None):
     h5 = relu(d_bns[5](conv3d(h4, 128, name='u_h5_conv'),phase))
     p5 = max_pool3D(h5)
 
-    h6 = relu(d_bns[6](conv3d(p5, 256, name='u_h6_conv'),phase))
-    h7 = relu(d_bns[7](conv3d(h6, 256, name='u_h7_conv'),phase))
+    h6 = relu(d_bns[6](conv3d(p5, 48, name='u_h6_conv'),phase))
+    h7 = relu(d_bns[7](conv3d(h6, 48, name='u_h7_conv'),phase))
 
-    up1 = deconv3d(h7,[F.batch_size,sh1,sh1,sh1,256],name='d_up1_deconv')
+    up1 = deconv3d(h7,[F.batch_size,sh1,sh1,sh1,48],name='d_up1_deconv')
     up1 = tf.concat([h5,up1],4)
     h8 = relu(d_bns[8](conv3d(up1, 128, name='u_h8_conv'),phase))
     h9 = relu(d_bns[9](conv3d(h8, 128, name='u_h9_conv'),phase))
@@ -186,7 +186,7 @@ def test(patch_shape,extraction_step):
                                                                         np.max(predictions_test))
 
       #To stitch the image back
-      images_pred = recompose3D_overlap(predictions_test,144, 192, 256, extraction_step[0],
+      images_pred = recompose3D_overlap(predictions_test,240, 240, 48, extraction_step[0],
                                                         extraction_step[1],extraction_step[2])
 
       print("Shape of Predicted Output Groundtruth Images:",images_pred.shape,
@@ -195,14 +195,14 @@ def test(patch_shape,extraction_step):
       
       # To save the images
       for i in range(F.number_test_images):
-        pred2d=np.reshape(images_pred[i],(144*192*256))
-        lab2d=np.reshape(labels_test[i],(144*192*256))
+        pred2d=np.reshape(images_pred[i],(240*240*48))
+        lab2d=np.reshape(labels_test[i],(240*240*48))
         save_image(F.results_dir,images_pred[i],F.number_train_images+i+2)
         F1_score = f1_score(lab2d, pred2d,[0,1,2,3],average=None)
 
       # Evaluation
-      pred2d=np.reshape(images_pred,(images_pred.shape[0]*144*192*256))
-      lab2d=np.reshape(labels_test,(labels_test.shape[0]*144*192*256))
+      pred2d=np.reshape(images_pred,(images_pred.shape[0]*240*240*48))
+      lab2d=np.reshape(labels_test,(labels_test.shape[0]*240*240*48))
 
       F1_score = f1_score(lab2d, pred2d,[0,1,2,3],average=None)
       print("Testing Dice Coefficient.... ")
