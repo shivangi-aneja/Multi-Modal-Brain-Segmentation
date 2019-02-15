@@ -193,13 +193,13 @@ def test(patch_shape,extraction_step):
       print("Shape of Predicted Output Groundtruth Images:",images_pred.shape,
                                                 np.min(images_pred), np.max(images_pred),
                                                 np.mean(images_pred),np.mean(labels_test))
-      
+
       # To save the images
+      test_idx = [7, 14]
       for i in range(F.number_test_images):
-        pred2d=np.reshape(images_pred[i],(240*240*48))
-        lab2d=np.reshape(labels_test[i],(240*240*48))
-        save_image(F.results_dir,images_pred[i],F.number_train_images+i+2)
-        F1_score = f1_score(lab2d, pred2d,[0,1,2,3],average=None)
+        # pred2d=np.reshape(images_pred[i],(240*240*48))
+        # lab2d=np.reshape(labels_test[i],(240*240*48))
+        save_image(F.results_dir, images_pred[i], test_idx[i])
 
       # Evaluation
       pred2d=np.reshape(images_pred,(images_pred.shape[0]*240*240*48))
