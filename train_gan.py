@@ -71,8 +71,8 @@ def main(_):
 
     # Parameters of extracted training and testing patches
     patch_shape = (32, 32, 32)
-    extraction_step = (8, 8, 8)
-    testing_extraction_shape = (8, 8, 8)
+    extraction_step = (4, 4, 4)
+    testing_extraction_shape = (4, 4, 4)
 
     if FLAGS.training:
         # For training the network
