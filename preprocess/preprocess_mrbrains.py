@@ -102,11 +102,11 @@ def get_patches_lab(FLAIR_vols, reg_T1_vols, label_vols, extraction_step,
     for idx in range(len(FLAIR_vols)):
         y_length = len(y)
         if testing:
-            print(("Extracting Patches from Labelled Image %2d ....") % (num_images_training + idx + 2))
+            print(("Test Mode : Extracting Patches from Labelled Image %2d ....") % (num_images_training + idx + 2))
         elif validating:
-            print(("Extracting Patches from Labelled Image %2d ....") % (num_images_training + idx + 1))
+            print(("Val Mode : Extracting Patches from Labelled Image %2d ....") % (num_images_training + idx + 1))
         else:
-            print(("Extracting Patches from Labelled Image %2d ....") % (1 + idx))
+            print(("Train Mode : Extracting Patches from Labelled Image %2d ....") % (1 + idx))
         label_patches = extract_patches(label_vols[idx], patch_shape, extraction_step,
                                         datype="uint8")
 
@@ -329,6 +329,7 @@ def preprocess_static(org_dir, prepro_dir, dataset="labeled", overwrite=False):
                       copy=True)
     else:
         for case_idx in range(11, 24):
+            print("xyz")
             normalise(case_idx, 'T1', org_dir, prepro_dir,dataset)
             normalise(case_idx, 'T2', org_dir, prepro_dir,dataset)
 
@@ -398,13 +399,3 @@ class dataset_badGAN(object):
             yield self.data_lab[i * self.batch_size:(i + 1) * self.batch_size], \
                   self.data_unlab[i * self.batch_size:(i + 1) * self.batch_size], \
                   self.label[i * self.batch_size:(i + 1) * self.batch_size]
-
-# preprocess_static( actual_data_directory, preprocesses_data_directory, overwrite=True)
-
-# For labelled data
-# preprocess_static(org_dir="../data/mrbrains",prepro_dir= "../data/mrbrains_preprocessed",dataset="train", overwrite=True)
-# preprocess_static(org_dir="../data/mrbrains",prepro_dir= "../data/mrbrains_preprocessed",dataset="val", overwrite=True)
-# preprocess_static(org_dir="../data/mrbrains",prepro_dir= "../data/mrbrains_preprocessed",dataset="test", overwrite=True)
-#
-# # For unlabelled data
-# preprocess_static(org_dir="../data/iSEG",prepro_dir= "../data/iSEG_preprocessed",dataset="unlabelled", overwrite=True)
