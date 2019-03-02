@@ -2,7 +2,7 @@ from __future__ import division
 
 from six.moves import xrange
 from sklearn.metrics import f1_score
-
+from eval.evaluation_metric import get_dice_score
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
@@ -362,7 +362,7 @@ class model(object):
 
             # For printing the validation results
             F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
-            print("Validation Dice Coefficient.... ")
+            print("Validation F1 Score.... ")
             print("Background:", F1_score[0])
             print("Cortical Gray Matter:", F1_score[1])
             print("Basal ganglia:", F1_score[2])
@@ -372,6 +372,9 @@ class model(object):
             print("Ventricles:", F1_score[6])
             print("Cerebellum:", F1_score[7])
             print("Brain stem:", F1_score[8])
+
+            dice_score = get_dice_score(lab2d, pred2d)
+            print(dice_score)
 
             # To Save the best model
             if (max_par < (F1_score[2] + F1_score[3])):

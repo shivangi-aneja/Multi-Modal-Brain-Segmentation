@@ -156,6 +156,20 @@ def getVS(testImage, resultImage):
 
     return vs
 
+def get_dice_score(lab2d, pred2d):
+    """Compute the Dice Similarity Coefficient."""
+
+    dsc = []
+    for k in range(9):
+        # similarity = 1.0 - dissimilarity
+        # scipy.spatial.distance.dice raises a ZeroDivisionError if both arrays contain only zeros.
+        try:
+            dsc[k] = 1.0 - scipy.spatial.distance.dice(np.where(lab2d==k,lab2d,0), np.where(pred2d==k,pred2d,0))
+        except ZeroDivisionError:
+            dsc[k] = 0
+
+    return dsc
+
 
 if __name__ == '__main__':
     evaluate_stats(test_idx=[7, 14])
