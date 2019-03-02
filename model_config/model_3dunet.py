@@ -219,7 +219,7 @@ class UNET(object):
                 total_train_loss = total_train_loss + u_loss
 
                 idx += 1
-                print(("Epoch:[%2d] [%4d/%4d] Loss:%.2e \n") % (epoch, idx, data.num_batches, u_loss))
+                print(("Epoch:[%2d] [%4d/%4d] Loss:%.4f \n") % (epoch, idx, data.num_batches, u_loss))
 
             # Save model
             save_model(F.checkpoint_dir, self.sess, self.saver)

@@ -16,6 +16,11 @@ seed = 0
 np.random.seed(seed)
 
 all_modalities = {'FLAIR', 'reg_T1'}
+#train_idx = [1, 4, 5, 70]
+train_idx = [1]
+#val_idx = [148]
+val_idx = [148]
+test_idx = [7, 14]
 
 
 def get_filename(set_name, case_idx, input_name, loc):
@@ -143,9 +148,6 @@ To preprocess the labelled training data
 
 def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_images_training=4,
                            validating=False, testing=False, num_images_testing=2):
-    train_idx = [1, 4, 5, 70]
-    val_idx = [148]
-    test_idx = [7, 14]
     cases = None
     mode = None
 
@@ -276,62 +278,6 @@ def preprocess_dynamic_unlab(dir, extraction_step, patch_shape, num_images_train
     x = get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir)
     print("Total Extracted Unlabelled Patches Shape:", x.shape)
     return x
-
-
-def preprocess_static(org_dir, prepro_dir, dataset="labeled", overwrite=False):
-    if not os.path.exists(prepro_dir):
-        os.makedirs(prepro_dir)
-    for subject_folder in glob.glob(os.path.join(org_dir, "*", "*")):
-        if os.path.isdir(subject_folder):
-            subject = os.path.basename(subject_folder)
-            new_subject_folder = os.path.join(prepro_dir,
-                                              os.path.basename(os.path.dirname(subject_folder)), subject)
-            if not os.path.exists(new_subject_folder) or overwrite:
-                if not os.path.exists(new_subject_folder):
-                    os.makedirs(new_subject_folder)
-    if dataset == "train":
-            normalise(1, 'FLAIR', org_dir, prepro_dir,dataset)
-            normalise(1, 'reg_T1', org_dir, prepro_dir,dataset)
-            normalise(1, 'segm', org_dir, prepro_dir,dataset,
-                      copy=True)
-
-            normalise(4, 'FLAIR', org_dir, prepro_dir,dataset)
-            normalise(4, 'reg_T1', org_dir, prepro_dir,dataset)
-            normalise(4, 'segm', org_dir, prepro_dir,dataset,
-                      copy=True)
-
-            normalise(5, 'FLAIR', org_dir, prepro_dir,dataset)
-            normalise(5, 'reg_T1', org_dir, prepro_dir,dataset)
-            normalise(5, 'segm', org_dir, prepro_dir,dataset,
-                      copy=True)
-
-            normalise(70, 'FLAIR', org_dir, prepro_dir,dataset)
-            normalise(70, 'reg_T1', org_dir, prepro_dir,dataset)
-            normalise(70, 'segm', org_dir, prepro_dir,dataset,
-                      copy=True)
-
-    if dataset == "val":
-            normalise(148, 'FLAIR', org_dir, prepro_dir,dataset)
-            normalise(148, 'reg_T1', org_dir, prepro_dir,dataset)
-            normalise(148, 'segm', org_dir, prepro_dir,dataset,
-                      copy=True)
-
-
-    if dataset == "test":
-            normalise(7, 'FLAIR', org_dir, prepro_dir,dataset)
-            normalise(7, 'reg_T1', org_dir, prepro_dir,dataset)
-            normalise(7, 'segm', org_dir, prepro_dir,dataset,
-                      copy=True)
-
-            normalise(14, 'FLAIR', org_dir, prepro_dir,dataset)
-            normalise(14, 'reg_T1', org_dir, prepro_dir,dataset)
-            normalise(14, 'segm', org_dir, prepro_dir,dataset,
-                      copy=True)
-    else:
-        for case_idx in range(11, 24):
-            print("xyz")
-            normalise(case_idx, 'T1', org_dir, prepro_dir,dataset)
-            normalise(case_idx, 'T2', org_dir, prepro_dir,dataset)
 
 
 """
