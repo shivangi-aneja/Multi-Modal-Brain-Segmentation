@@ -19,7 +19,9 @@ all_modalities = {'FLAIR', 'reg_T1'}
 #train_idx = [1, 4, 5, 70]
 train_idx = [1]
 #val_idx = [148]
-val_idx = [148]
+val_idx = [1]
+#unlabelled_cases = [0,2,4,6]
+unlabelled_cases = [0]
 test_idx = [7, 14]
 
 
@@ -256,10 +258,10 @@ To preprocess the unlabeled training data
 def preprocess_dynamic_unlab(dir, extraction_step, patch_shape, num_images_training_unlab):
     FLAIR_vols = np.empty((num_images_training_unlab, 240, 240,48), dtype="float32")
     reg_T1_vols = np.empty((num_images_training_unlab, 240, 240,48), dtype="float32")
-    cases = [0,2,4,6]
-    for case_idx in range(len(cases)):
-        FLAIR_vols[case_idx, :, :, :] = read_vol(cases[case_idx], 'FLAIR', dir,"unlabelled")
-        reg_T1_vols[case_idx, :, :, :] = read_vol(cases[case_idx], 'T1', dir,"unlabelled")
+
+    for case_idx in range(len(unlabelled_cases)):
+        FLAIR_vols[case_idx, :, :, :] = read_vol(unlabelled_cases[case_idx], 'FLAIR', dir,"unlabelled")
+        reg_T1_vols[case_idx, :, :, :] = read_vol(unlabelled_cases[case_idx], 'T1', dir,"unlabelled")
         # print(read_vol(case_idx, 'T2', dir).shape)
     FLAIR_mean = FLAIR_vols.mean()
     FLAIR_std = FLAIR_vols.std()
