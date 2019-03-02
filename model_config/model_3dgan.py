@@ -1,3 +1,6 @@
+"""
+    3d Multi Modal GAN
+"""
 from __future__ import division
 
 from six.moves import xrange
@@ -11,10 +14,6 @@ from tf_logging.tf_logger import Logger
 
 F = tf.app.flags.FLAGS
 
-"""
-Model class
-
-"""
 
 
 class model(object):
@@ -175,6 +174,7 @@ class model(object):
 
         # Unsupervised loss
         self.unl_lsexp = tf.reduce_logsumexp(self.D_logits_unlab, -1)
+        # Fake loss
         self.fake_lsexp = tf.reduce_logsumexp(self.D_logits_fake, -1)
 
         # Unlabeled loss

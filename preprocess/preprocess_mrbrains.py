@@ -12,7 +12,7 @@ from sklearn.utils import shuffle
 
 F = tf.app.flags.FLAGS
 
-seed = 7
+seed = 0
 np.random.seed(seed)
 
 all_modalities = {'FLAIR', 'reg_T1'}
@@ -137,7 +137,7 @@ def get_patches_lab(FLAIR_vols, reg_T1_vols, label_vols, extraction_step,
 
 
 """
-To preprocess the labeled training data
+To preprocess the labelled training data
 """
 
 

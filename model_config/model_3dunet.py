@@ -2,7 +2,7 @@ from __future__ import division
 
 from six.moves import xrange
 from sklearn.metrics import f1_score
-
+from eval.evaluation_metric import get_dice_score
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
@@ -274,6 +274,9 @@ class UNET(object):
             print("Ventricles:", F1_score[6])
             print("Cerebellum:", F1_score[7])
             print("Brain stem:", F1_score[8])
+
+            dice_score = get_dice_score(lab2d, pred2d)
+            print(dice_score)
 
             # To save the best model based on validation
             if (max_par < (F1_score[2] + F1_score[3])):
