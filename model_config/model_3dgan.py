@@ -374,7 +374,6 @@ class model(object):
             print("Brain stem:", F1_score[8])
 
             dice_score = get_dice_score(lab2d, pred2d)
-            print(dice_score)
 
             # To Save the best model
             if (max_par < (F1_score[2] + F1_score[3])):
@@ -389,15 +388,6 @@ class model(object):
             self.logger.log_loss(mode='train_ul', loss=avg_train_loss_UL, epoch=epoch + 1)
             self.logger.log_loss(mode='train_fk', loss=avg_train_loss_FK, epoch=epoch + 1)
             self.logger.log_loss(mode='train_fm', loss=avg_gen_FMloss, epoch=epoch + 1)
+            self.logger.log_dice(mode='dice_val', dice_score=dice_score, epoch=epoch + 1)
 
-            # with open('Val_loss_GAN.txt', 'a') as f:
-            #     f.write('%.2e \n' % avg_val_loss)
-            # with open('Train_loss_CE.txt', 'a') as f:
-            #     f.write('%.2e \n' % avg_train_loss_CE)
-            # with open('Train_loss_UL.txt', 'a') as f:
-            #     f.write('%.2e \n' % avg_train_loss_UL)
-            # with open('Train_loss_FK.txt', 'a') as f:
-            #     f.write('%.2e \n' % avg_train_loss_FK)
-            # with open('Train_loss_FM.txt', 'a') as f:
-            #     f.write('%.2e \n' % avg_gen_FMloss)
         return

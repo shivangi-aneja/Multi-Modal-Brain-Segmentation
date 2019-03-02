@@ -276,7 +276,6 @@ class UNET(object):
             print("Brain stem:", F1_score[8])
 
             dice_score = get_dice_score(lab2d, pred2d)
-            print(dice_score)
 
             # To save the best model based on validation
             if (max_par < (F1_score[2] + F1_score[3])):
