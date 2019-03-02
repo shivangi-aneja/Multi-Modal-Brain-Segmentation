@@ -288,5 +288,6 @@ class UNET(object):
             print("Average Validation Loss:", avg_val_loss)
             self.logger.log_loss(mode='val_loss', loss=avg_val_loss, epoch=epoch + 1)
             self.logger.log_loss(mode='train_ce', loss=avg_train_loss, epoch=epoch + 1)
+            self.logger.log_dice(mode='dice_val', dice_score=dice_score, epoch=epoch + 1)
 
         return

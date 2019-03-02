@@ -34,10 +34,17 @@ class Logger:
 
         # var_class = torch.autograd.variable.Variable
         if isinstance(loss, torch.autograd.Variable):
-            acc = loss.data.cpu().numpy()
+            loss = loss.data.cpu().numpy()
 
         self.writer.add_scalar(
             '{}_loss'.format(mode + '_' + self.comment), loss, epoch)
+
+
+    def log_dice(self, mode, dice_score, epoch):
+
+        for i in range(len(dice_score)):
+            self.writer.add_scalar(
+                '{}_dice/'+str(i).format(mode + '_' + self.comment), dice_score[i], epoch)
 
 
     def display_status(self, epoch, num_epochs, n_batch, num_batches, d_error, g_error, d_pred_real, d_pred_fake):
