@@ -42,9 +42,14 @@ class Logger:
 
     def log_dice(self, mode, dice_score, epoch):
 
-        for i in range(len(dice_score)):
-            self.writer.add_scalar(
-                '{}_dice/'+str(i).format(mode + '_' + self.comment), dice_score[i], epoch)
+        self.writer.add_scalar('{}_dice/cortical_gray_matter'.format(mode + '_' + self.comment), dice_score[1], epoch)
+        self.writer.add_scalar('{}_dice/basal_ganglia'.format(mode + '_' + self.comment), dice_score[2], epoch)
+        self.writer.add_scalar('{}_dice/white_matter'.format(mode + '_' + self.comment), dice_score[3], epoch)
+        self.writer.add_scalar('{}_dice/white_matter_lesions'.format(mode + '_' + self.comment), dice_score[4], epoch)
+        self.writer.add_scalar('{}_dice/cerebrospinal_fluid'.format(mode + '_' + self.comment), dice_score[5], epoch)
+        self.writer.add_scalar('{}_dice/ventricles'.format(mode + '_' + self.comment), dice_score[6], epoch)
+        self.writer.add_scalar('{}_dice/cerebellum'.format(mode + '_' + self.comment), dice_score[7], epoch)
+        self.writer.add_scalar('{}_dice/brain_stem'.format(mode + '_' + self.comment), dice_score[8], epoch)
 
 
     def display_status(self, epoch, num_epochs, n_batch, num_batches, d_error, g_error, d_pred_real, d_pred_fake):
