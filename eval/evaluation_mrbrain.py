@@ -23,10 +23,8 @@ labels = {1: 'Cortical gray matter',
           }
 
 
-def evaluate(result_dir,gt_dir):
+def evaluate(resultFilename,testFilename):
     """Main function"""
-    resultFilename = os.path.join(result_dir, 'result_148.nii.gz')
-    testFilename = os.path.join(gt_dir, 'segm.nii.gz')
 
     testImage, resultImage = getImages(testFilename, resultFilename)
 
