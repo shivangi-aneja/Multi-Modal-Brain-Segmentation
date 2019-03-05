@@ -244,6 +244,7 @@ class UNET(object):
                 predictions_val[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :] = preds
                 print(("Validated Patch:[%8d/%8d]") % (batch, total_batches))
                 total_val_loss = total_val_loss + val_loss
+                break
 
             avg_val_loss = total_val_loss / (total_batches * 1.0)
 
