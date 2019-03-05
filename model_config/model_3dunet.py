@@ -220,6 +220,7 @@ class UNET(object):
 
                 idx += 1
                 print(("Epoch:[%2d] [%4d/%4d] Loss:%.4f \n") % (epoch, idx, data.num_batches, u_loss))
+                break
 
             # Save model
             save_model(F.checkpoint_dir, self.sess, self.saver)

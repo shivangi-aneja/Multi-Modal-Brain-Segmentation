@@ -177,8 +177,9 @@ def get_hausdorff_distance(lab2d, pred2d):
 
     h_dist = dict()
     for k in range(9):
-            h_dist[k] = max(directed_hausdorff(np.where(lab2d==k,lab2d,0)[0], np.where(pred2d==k,pred2d,0))[0],
-                            directed_hausdorff(np.where(pred2d == k, pred2d, 0)[0],np.where(lab2d == k, lab2d, 0))[0])
+        print(np.where(lab2d==k,lab2d,0).shape)
+        h_dist[k] = max(directed_hausdorff(u=np.where(lab2d==k,lab2d,0), v=np.where(pred2d==k,pred2d,0))[0],
+                            directed_hausdorff(u=np.where(pred2d == k, pred2d, 0),v=np.where(lab2d == k, lab2d, 0))[0])
     return h_dist
 
 
