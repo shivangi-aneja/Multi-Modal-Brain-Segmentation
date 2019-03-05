@@ -116,7 +116,7 @@ def getHausdorff(testImage, resultImage):
         # (Simple)ITK does not accept all Numpy arrays; therefore we need to convert the coordinate tuples into a Python list before passing them to TransformIndexToPhysicalPoint().
         testCoordinates = [testImage.TransformIndexToPhysicalPoint(x.tolist()) for x in
                            np.transpose(np.flipud(np.nonzero(hTestArray)))]
-        resultCoordinates = [testImage.TransformIndexToPhysicalPoint(x.tolist()) for x in
+        resultCoordinates = [resultImage.TransformIndexToPhysicalPoint(x.tolist()) for x in
                              np.transpose(np.flipud(np.nonzero(hResultArray)))]
 
         # Use a kd-tree for fast spatial search
@@ -171,16 +171,28 @@ def get_dice_score(lab2d, pred2d):
             dsc[k] = 0
     return dsc
 
+def getDistancesFromAtoB(a, b):
+    kdTree = scipy.spatial.KDTree(a, leafsize=100)
+    return kdTree.query(b, k=1, eps=0, p=2)[0]
+
 
 def get_hausdorff_distance(lab2d, pred2d):
     """Compute the Hausdorff Distance."""
 
     h_dist = dict()
     for k in range(9):
-        gt_val = np.reshape(np.where(lab2d==k,lab2d,0),[240,240,48])
-        pred_val = np.reshape(np.where(pred2d==k,pred2d,0),[240,240,48])
-        h_dist[k] = max(directed_hausdorff(u=gt_val, v=pred_val)[0],
-                            directed_hausdorff(u=pred_val, v=gt_val)[0])
+
+
+        # Compute distances from test to result and vice versa.
+        dTestToResult = getDistancesFromAtoB(lab2d, pred2d)
+        dResultToTest = getDistancesFromAtoB(pred2d, lab2d)
+        h_dist[k] = max(np.percentile(dTestToResult, 95), np.percentile(dResultToTest, 95))
+
+
+        # gt_val = np.reshape(np.where(lab2d==k,lab2d,0),[240,240,48])
+        # pred_val = np.reshape(np.where(pred2d==k,pred2d,0),[240,240,48])
+        # h_dist[k] = max(directed_hausdorff(u=gt_val, v=pred_val)[0],
+        #                     directed_hausdorff(u=pred_val, v=gt_val)[0])
     return h_dist
 
 

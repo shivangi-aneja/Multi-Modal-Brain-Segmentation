@@ -1,14 +1,9 @@
-import glob
-import os
-import shutil
+
 
 import nibabel as nib
 import numpy as np
 import tensorflow as tf
-from nipype.interfaces.ants import N4BiasFieldCorrection
 from sklearn.utils import shuffle
-
-# import pdb
 
 F = tf.app.flags.FLAGS
 

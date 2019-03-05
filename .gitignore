@@ -6,3 +6,4 @@ images/*
 checkpoint/*
 results/*
 tf_logs/*
+test.py
