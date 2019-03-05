@@ -5,6 +5,7 @@ import numpy as np
 import os
 import SimpleITK as sitk
 import scipy.spatial
+from scipy.spatial.distance import directed_hausdorff
 
 
 labels = {
@@ -167,9 +168,40 @@ def get_dice_score(lab2d, pred2d):
             dsc[k] = 1.0 - scipy.spatial.distance.dice(np.where(lab2d==k,lab2d,0), np.where(pred2d==k,pred2d,0))
         except ZeroDivisionError:
             dsc[k] = 0
-
     return dsc
 
+
+def get_hausdorff_distance(lab2d, pred2d):
+    """Compute the Hausdorff Distance."""
+
+    h_dist = dict()
+    for k in range(9):
+        try:
+            h_dist[k] = max(directed_hausdorff(np.where(lab2d==k,lab2d,0), np.where(pred2d==k,pred2d,0))[0],
+                            directed_hausdorff(np.where(pred2d == k, pred2d, 0),np.where(lab2d == k, lab2d, 0))[0])
+        except:
+            print("Exception")
+            h_dist[k] = None
+    return h_dist
+
+
+def get_volumetric_symmetry(lab2d, pred2d):
+    """Compute the volumetric symmetry"""
+
+    vs = dict()
+    for k in range(9):
+        gt_labels = np.where(lab2d == k, lab2d, 0)
+        pred_labels = np.where(pred2d==k,pred2d,0)
+
+        numerator = abs(np.sum(gt_labels) - np.sum(pred_labels))
+        denominator = np.sum(gt_labels) + np.sum(pred_labels)
+
+        if denominator > 0:
+            vs[k] = 1 - float(numerator) / denominator
+        else:
+            vs[k] = None
+
+    return vs
 
 if __name__ == '__main__':
     evaluate_stats(test_idx=[7, 14])

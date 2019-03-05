@@ -40,8 +40,18 @@ class Logger:
             '{}_loss'.format(mode + '_' + self.comment), loss, epoch)
 
 
-    def log_dice(self, mode, dice_score, epoch):
+    def log_segmentation_metrics(self, mode, dice_score, hausdorff_dist, vol_sim, epoch):
+        """
+        Evaluation Metrics
+        :param mode:
+        :param dice_score:
+        :param hausdorff_dist:
+        :param vol_sim:
+        :param epoch:
+        :return:
+        """
 
+        # Dice Score
         self.writer.add_scalar('{}_dice/cortical_gray_matter'.format(mode + '_' + self.comment), dice_score[1], epoch)
         self.writer.add_scalar('{}_dice/basal_ganglia'.format(mode + '_' + self.comment), dice_score[2], epoch)
         self.writer.add_scalar('{}_dice/white_matter'.format(mode + '_' + self.comment), dice_score[3], epoch)
@@ -50,6 +60,26 @@ class Logger:
         self.writer.add_scalar('{}_dice/ventricles'.format(mode + '_' + self.comment), dice_score[6], epoch)
         self.writer.add_scalar('{}_dice/cerebellum'.format(mode + '_' + self.comment), dice_score[7], epoch)
         self.writer.add_scalar('{}_dice/brain_stem'.format(mode + '_' + self.comment), dice_score[8], epoch)
+
+        # Hausdorff Score
+        self.writer.add_scalar('{}_hausdorff/cortical_gray_matter'.format(mode + '_' + self.comment), hausdorff_dist[1], epoch)
+        self.writer.add_scalar('{}_hausdorff/basal_ganglia'.format(mode + '_' + self.comment), hausdorff_dist[2], epoch)
+        self.writer.add_scalar('{}_hausdorff/white_matter'.format(mode + '_' + self.comment), hausdorff_dist[3], epoch)
+        self.writer.add_scalar('{}_hausdorff/white_matter_lesions'.format(mode + '_' + self.comment), hausdorff_dist[4], epoch)
+        self.writer.add_scalar('{}_hausdorff/cerebrospinal_fluid'.format(mode + '_' + self.comment), hausdorff_dist[5], epoch)
+        self.writer.add_scalar('{}_hausdorff/ventricles'.format(mode + '_' + self.comment), hausdorff_dist[6], epoch)
+        self.writer.add_scalar('{}_hausdorff/cerebellum'.format(mode + '_' + self.comment), hausdorff_dist[7], epoch)
+        self.writer.add_scalar('{}_hausdorff/brain_stem'.format(mode + '_' + self.comment), hausdorff_dist[8], epoch)
+
+        # Volumetric Score
+        self.writer.add_scalar('{}_vol_sim/cortical_gray_matter'.format(mode + '_' + self.comment), vol_sim[1],epoch)
+        self.writer.add_scalar('{}_vol_sim/basal_ganglia'.format(mode + '_' + self.comment), vol_sim[2], epoch)
+        self.writer.add_scalar('{}_vol_sim/white_matter'.format(mode + '_' + self.comment), vol_sim[3], epoch)
+        self.writer.add_scalar('{}_vol_sim/white_matter_lesions'.format(mode + '_' + self.comment), vol_sim[4],epoch)
+        self.writer.add_scalar('{}_vol_sim/cerebrospinal_fluid'.format(mode + '_' + self.comment), vol_sim[5],epoch)
+        self.writer.add_scalar('{}_vol_sim/ventricles'.format(mode + '_' + self.comment), vol_sim[6], epoch)
+        self.writer.add_scalar('{}_vol_sim/cerebellum'.format(mode + '_' + self.comment), vol_sim[7], epoch)
+        self.writer.add_scalar('{}_vol_sim/brain_stem'.format(mode + '_' + self.comment), vol_sim[8], epoch)
 
 
     def display_status(self, epoch, num_epochs, n_batch, num_batches, d_error, g_error, d_pred_real, d_pred_fake):
