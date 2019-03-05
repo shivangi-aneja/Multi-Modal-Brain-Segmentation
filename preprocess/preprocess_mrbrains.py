@@ -35,7 +35,6 @@ def get_filename(set_name, case_idx, input_name, loc):
 
 
 def read_data(case_idx, input_name, loc,set_name):
-    #set_name = get_set_name(case_idx)
 
     image_path = get_filename(set_name, case_idx, input_name, loc)
     print(image_path)
@@ -46,26 +45,6 @@ def read_data(case_idx, input_name, loc,set_name):
 def read_vol(case_idx, input_name, dir,mode):
     image_data = read_data(case_idx, input_name, dir,mode)
     return image_data.get_data()
-
-
-def correct_bias(in_file, out_file):
-    correct = N4BiasFieldCorrection()
-    correct.inputs.input_image = in_file
-    correct.inputs.output_image = out_file
-    done = correct.run()
-    return done.outputs.output_image
-
-
-def normalise(case_idx, input_name, in_dir, out_dir,set_name, copy=False):
-    #set_name = get_set_name(case_idx)
-    image_in_path = get_filename(set_name, case_idx, input_name, in_dir)
-    image_out_path = get_filename(set_name, case_idx, input_name, out_dir)
-    if copy:
-        shutil.copy(image_in_path, image_out_path)
-    else:
-        correct_bias(image_in_path, image_out_path)
-    print(image_in_path + " done.")
-
 
 """
 To extract patches from a 3D image
