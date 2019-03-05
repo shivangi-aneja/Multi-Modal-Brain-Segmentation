@@ -11,10 +11,10 @@ seed = 0
 np.random.seed(seed)
 
 all_modalities = {'FLAIR', 'reg_T1'}
-#train_idx = [1, 4, 5, 70]
-train_idx = [1]
-#val_idx = [148]
-val_idx = [1]
+train_idx = [1, 4, 5, 70]
+#train_idx = [1]
+val_idx = [148]
+#val_idx = [1]
 unlabelled_cases = [0,2,4,6]
 #unlabelled_cases = [0]
 test_idx = [7, 14]

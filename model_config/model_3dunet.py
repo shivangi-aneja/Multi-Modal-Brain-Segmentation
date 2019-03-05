@@ -199,7 +199,6 @@ class UNET(object):
         predictions_val = np.zeros((patches_val.shape[0], self.patch_shape[0], self.patch_shape[1],
                                     self.patch_shape[2]), dtype='uint8')
         max_par = 0.0
-        max_loss = 100
         for epoch in xrange(int(F.epoch)):
             idx = 0
             batch_iter_train = data.batch_train()
@@ -220,10 +219,15 @@ class UNET(object):
 
                 idx += 1
                 print(("Epoch:[%2d] [%4d/%4d] Loss:%.4f \n") % (epoch, idx, data.num_batches, u_loss))
-                break
 
-            # Save model
+            # Save model (Current Checkpoint)
             save_model(F.checkpoint_dir, self.sess, self.saver)
+
+            # Save checkpoint after every 20 epochs
+            if epoch % 20 == 0:
+                if not os.path.exists(F.checkpoint_base+"/"+str(epoch)):
+                    os.makedirs(F.checkpoint_base+"/"+str(epoch))
+                    save_model(F.checkpoint_base+"/"+str(epoch), self.sess, self.saver)
 
             # Validation
             avg_train_loss = total_train_loss / (idx * 1.0)
@@ -244,7 +248,6 @@ class UNET(object):
                 predictions_val[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :] = preds
                 print(("Validated Patch:[%8d/%8d]") % (batch, total_batches))
                 total_val_loss = total_val_loss + val_loss
-                break
 
             avg_val_loss = total_val_loss / (total_batches * 1.0)
 
@@ -282,13 +285,10 @@ class UNET(object):
             print("Brain stem:", F1_score[8])
 
             dice_score,hausdorff_dist,vol_sim = evaluate(os.path.join(F.results_dir, 'result_148.nii.gz'), os.path.join(F.data_directory+"/val/148", 'segm.nii.gz'))
-            print(dice_score)
-            print(hausdorff_dist)
-            print(vol_sim)
 
             # To save the best model based on validation
-            if (max_par < (F1_score[2] + F1_score[3])):
-                max_par = (F1_score[2] + F1_score[3])
+            if (max_par < (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])):
+                max_par = (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])
                 save_model(F.best_checkpoint_dir, self.sess, self.saver)
                 print("Best checkpoint got updated from validation results.")
 

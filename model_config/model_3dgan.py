@@ -5,7 +5,7 @@ from __future__ import division
 
 from six.moves import xrange
 from sklearn.metrics import f1_score
-from eval.evaluation_metric import get_dice_score
+from eval.evaluation_mrbrain import evaluate
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
@@ -360,6 +360,9 @@ class model(object):
             pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 240 * 240 * 48))
             lab2d = np.reshape(labels_val, (labels_val.shape[0] * 240 * 240 * 48))
 
+            # Save the predicted image
+            save_image(F.results_dir, val_image_pred[0], 148)
+
             # For printing the validation results
             F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
             print("Validation F1 Score.... ")
@@ -373,7 +376,8 @@ class model(object):
             print("Cerebellum:", F1_score[7])
             print("Brain stem:", F1_score[8])
 
-            dice_score = get_dice_score(lab2d, pred2d)
+            dice_score, hausdorff_dist, vol_sim = evaluate(os.path.join(F.results_dir, 'result_148.nii.gz'),
+                                                           os.path.join(F.data_directory + "/val/148", 'segm.nii.gz'))
 
             # To Save the best model
             if (max_par < (F1_score[2] + F1_score[3])):
