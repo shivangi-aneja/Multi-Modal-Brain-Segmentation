@@ -270,7 +270,7 @@ class UNET(object):
             lab2d = np.reshape(labels_val, (labels_val.shape[0] * 240 * 240 * 48))
             # For printing the validation results
             F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
-            print("Validation Dice Coefficient.... ")
+            print("Validation F1 Score")
             print("Background:", F1_score[0])
             print("Cortical Gray Matter:", F1_score[1])
             print("Basal ganglia:", F1_score[2])
