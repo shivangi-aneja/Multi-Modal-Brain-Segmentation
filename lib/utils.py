@@ -1,5 +1,5 @@
 import os
-
+import nibabel as nib
 import numpy as np
 import tensorflow as tf
 
@@ -88,3 +88,10 @@ def recompose3D_overlap(preds, img_h, img_w, img_d, stride_h, stride_w, stride_d
     assert (np.min(raw_sum) >= 1.0)
     final_matrix = np.around(raw_pred_martrix / raw_sum)
     return final_matrix
+
+# Function to save predicted images as .nii.gz file in results folder
+# Function to save predicted images as .nii.gz file in results folder
+def save_image(direc, i, num):
+    img = nib.Nifti1Image(i, None)
+    imgname = 'result_' + str(num) + '.nii.gz'
+    nib.save(img, os.path.join(direc, imgname))

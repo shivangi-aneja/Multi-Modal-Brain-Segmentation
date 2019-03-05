@@ -1,13 +1,5 @@
 from __future__ import division
-import os
-import pickle 
-import tensorflow as tf
-import numpy as np
 from sklearn.metrics import f1_score
-
-import sys
-
-
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
@@ -16,13 +8,6 @@ from preprocess.preprocess_mrbrains import *
 F = tf.app.flags.FLAGS
 
 d_bns = [batch_norm(name='u_bn{}'.format(i,)) for i in range(14)]
-
-# Function to save predicted images as .nii.gz file in results folder
-# Function to save predicted images as .nii.gz file in results folder
-def save_image(direc, i, num):
-    img = nib.Nifti1Image(i, None)
-    imgname = 'result_' + str(num) + '.nii.gz'
-    nib.save(img, os.path.join(direc, imgname))
 
 """
  Modified 3D U-Net 

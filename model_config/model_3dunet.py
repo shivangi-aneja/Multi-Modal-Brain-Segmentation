@@ -2,7 +2,7 @@ from __future__ import division
 
 from six.moves import xrange
 from sklearn.metrics import f1_score
-from eval.evaluation_metric import get_dice_score,get_hausdorff_distance,get_volumetric_symmetry
+from eval.evaluation_mrbrain import evaluate
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
@@ -262,6 +262,10 @@ class UNET(object):
                   np.unique(labels_val),
                   np.mean(val_image_pred), np.mean(labels_val))
 
+            # Save the predicted image
+            save_image(F.results_dir, val_image_pred[0], 148)
+
+
             pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 240 * 240 * 48))
             lab2d = np.reshape(labels_val, (labels_val.shape[0] * 240 * 240 * 48))
             # For printing the validation results
@@ -277,9 +281,10 @@ class UNET(object):
             print("Cerebellum:", F1_score[7])
             print("Brain stem:", F1_score[8])
 
-            dice_score = get_dice_score(lab2d, pred2d)
-            hausdorff_dist = get_hausdorff_distance(lab2d,pred2d)
-            vol_sim = get_volumetric_symmetry(lab2d,pred2d)
+            dice_score,hausdorff_dist,vol_sim = evaluate(F.results_dir, F.data_directory+"/val/148")
+            print(dice_score)
+            print(hausdorff_dist)
+            print(vol_sim)
 
             # To save the best model based on validation
             if (max_par < (F1_score[2] + F1_score[3])):
