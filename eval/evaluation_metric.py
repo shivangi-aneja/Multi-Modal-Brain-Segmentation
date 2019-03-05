@@ -167,6 +167,7 @@ def get_dice_score(lab2d, pred2d):
         try:
             dsc[k] = 1.0 - scipy.spatial.distance.dice(np.where(lab2d==k,lab2d,0), np.where(pred2d==k,pred2d,0))
         except ZeroDivisionError:
+            print("DIvision by Zero")
             dsc[k] = 0
     return dsc
 
@@ -176,12 +177,8 @@ def get_hausdorff_distance(lab2d, pred2d):
 
     h_dist = dict()
     for k in range(9):
-        try:
             h_dist[k] = max(directed_hausdorff(np.where(lab2d==k,lab2d,0), np.where(pred2d==k,pred2d,0))[0],
                             directed_hausdorff(np.where(pred2d == k, pred2d, 0),np.where(lab2d == k, lab2d, 0))[0])
-        except:
-            print("Exception")
-            h_dist[k] = None
     return h_dist
 
 
