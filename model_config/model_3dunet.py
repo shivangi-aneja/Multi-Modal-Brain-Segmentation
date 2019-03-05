@@ -281,7 +281,7 @@ class UNET(object):
             print("Cerebellum:", F1_score[7])
             print("Brain stem:", F1_score[8])
 
-            dice_score,hausdorff_dist,vol_sim = evaluate(os.path.join(F.result_dir, 'result_148.nii.gz'), os.path.join(F.data_directory+"/val/148", 'segm.nii.gz'))
+            dice_score,hausdorff_dist,vol_sim = evaluate(os.path.join(F.results_dir, 'result_148.nii.gz'), os.path.join(F.data_directory+"/val/148", 'segm.nii.gz'))
             print(dice_score)
             print(hausdorff_dist)
             print(vol_sim)
