@@ -122,7 +122,7 @@ def getHausdorff(testImage, resultImage):
         statistics.Execute(lResultImage)
         lResultSum = statistics.GetSum()
         if lTestSum == 0 or lResultSum == 0:
-            hd[k] = None
+            hd[k] = -1
             continue
 
         # Edge detection is done by ORIGINAL - ERODED, keeping the outer boundaries of lesions. Erosion is performed in 2D
