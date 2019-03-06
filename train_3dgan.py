@@ -28,10 +28,10 @@ flags.DEFINE_integer("number_test_images", 2, "No. of images for testing")
 flags.DEFINE_string("data_directory", "data/mrbrains", "Directory name containing the dataset")
 flags.DEFINE_string("dataset", "mrbrains", "Dataset name")
 flags.DEFINE_string("checkpoint_dir", "checkpoint/3d_gan/current", "Directory name to save the checkpoints [checkpoint]")
-flags.DEFINE_string("tf_logs", "3d_gan/", "Directory name to save tensorflow logs")
-flags.DEFINE_string("best_checkpoint_dir", "checkpoint/3d_gan/best",
-                    "Directory name to save the best checkpoints [checkpoint]")
+flags.DEFINE_string("checkpoint_base", "checkpoint/3d_gan/epochs", "Directory name to save the checkpoints epochs [checkpoint]")
+flags.DEFINE_string("best_checkpoint_dir", "checkpoint/3d_gan/best","Directory name to save the best checkpoints [checkpoint]")
 flags.DEFINE_string("results_dir", "results/3d_gan/", "Directory name to save the results [results]")
+flags.DEFINE_string("tf_logs", "3d_gan/", "Directory name to save tensorflow logs")
 
 flags.DEFINE_boolean("load_chkpt", False, "True for loading saved checkpoint")
 flags.DEFINE_boolean("training", False, "True for Training ")

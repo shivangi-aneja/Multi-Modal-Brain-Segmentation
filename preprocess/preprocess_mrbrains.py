@@ -202,8 +202,12 @@ def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir
     # Extract patches from input volumes and ground truth
     label_ref = np.empty((1, 240,240,48), dtype="uint8")
     x = np.zeros((0, patch_shape_1d, patch_shape_1d, patch_shape_1d, 2))
-    label_ref = read_vol(70, 'segm', dir,"train")
+
     for idx in range(len(FLAIR_vols)):
+
+        # Extract labels from other labelled patches
+        label_ref = read_vol(train_idx[idx], 'segm', dir, "train")
+
         x_length = len(x)
         print(("Processing the Image Unlabelled %2d ....") % (idx + 11))
         label_patches = extract_patches(label_ref, patch_shape, extraction_step)
@@ -292,11 +296,10 @@ class dataset_badGAN(object):
                  patch_shape, number_unlab_images_training, data_directory):
         # Extract labelled and unlabelled patches,
         self.batch_size = batch_size
-        self.data_lab, self.label = preprocess_dynamic_lab(
-            data_directory, num_classes, extraction_step,
-            patch_shape, number_images_training)
 
+        self.data_lab, self.label = preprocess_dynamic_lab(data_directory, num_classes, extraction_step,patch_shape, number_images_training)
         self.data_lab, self.label = shuffle(self.data_lab, self.label, random_state=0)
+
         self.data_unlab = preprocess_dynamic_unlab(data_directory, extraction_step,
                                                    patch_shape, number_unlab_images_training)
         self.data_unlab = shuffle(self.data_unlab, random_state=0)

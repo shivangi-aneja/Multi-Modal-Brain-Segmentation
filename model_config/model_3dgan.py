@@ -262,7 +262,6 @@ class model(object):
         predictions_val = np.zeros((patches_val.shape[0], self.patch_shape[0], self.patch_shape[1],
                                     self.patch_shape[2]), dtype="uint8")
         max_par = 0.0
-        max_loss = 100
         for epoch in xrange(int(F.epoch)):
             idx = 0
             batch_iter_train = data.batch_train()
@@ -313,8 +312,14 @@ class model(object):
                               "Epoch:[%2d] [%4d/%4d] Labeled loss:%.4f Unlabeled loss:%.4f Fake loss:%.4f Generator loss:%.8f \n") %
                           (epoch, idx, data.num_batches, d_loss_lab, d_loss_unlab_true, d_loss_unlab_fake, g_loss_fm))
 
-            # Save the curret model
+            # Save model (Current Checkpoint)
             save_model(F.checkpoint_dir, self.sess, self.saver)
+
+            # Save checkpoint after every 20 epochs
+            if epoch % 20 == 0:
+                if not os.path.exists(F.checkpoint_base + "/" + str(epoch)):
+                    os.makedirs(F.checkpoint_base + "/" + str(epoch))
+                    save_model(F.checkpoint_base + "/" + str(epoch), self.sess, self.saver)
 
             avg_train_loss_CE = total_train_loss_CE / (idx * 1.0)
             avg_train_loss_UL = total_train_loss_UL / (idx * 1.0)
@@ -357,11 +362,11 @@ class model(object):
                   np.unique(labels_val),
                   np.mean(val_image_pred), np.mean(labels_val))
 
-            pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 240 * 240 * 48))
-            lab2d = np.reshape(labels_val, (labels_val.shape[0] * 240 * 240 * 48))
-
             # Save the predicted image
             save_image(F.results_dir, val_image_pred[0], 148)
+
+            pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 240 * 240 * 48))
+            lab2d = np.reshape(labels_val, (labels_val.shape[0] * 240 * 240 * 48))
 
             # For printing the validation results
             F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
@@ -380,10 +385,10 @@ class model(object):
                                                            os.path.join(F.data_directory + "/val/148", 'segm.nii.gz'))
 
             # To Save the best model
-            if (max_par < (F1_score[2] + F1_score[3])):
-                max_par = (F1_score[2] + F1_score[3])
+            if (max_par < (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])):
+                max_par = (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])
                 save_model(F.best_checkpoint_dir, self.sess, self.saver)
-                print("Best checkpoint updated from validation results.")
+                print("Best checkpoint got updated from validation results.")
 
             # To save the losses for plotting
             print("Average Validation Loss:", avg_val_loss)
@@ -392,6 +397,7 @@ class model(object):
             self.logger.log_loss(mode='train_ul', loss=avg_train_loss_UL, epoch=epoch + 1)
             self.logger.log_loss(mode='train_fk', loss=avg_train_loss_FK, epoch=epoch + 1)
             self.logger.log_loss(mode='train_fm', loss=avg_gen_FMloss, epoch=epoch + 1)
-            self.logger.log_dice(mode='dice_val', dice_score=dice_score, epoch=epoch + 1)
+            self.logger.log_segmentation_metrics(mode='scores', dice_score=dice_score, hausdorff_dist=hausdorff_dist,
+                                                 vol_sim=vol_sim, epoch=epoch + 1)
 
         return
