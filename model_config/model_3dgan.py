@@ -353,7 +353,7 @@ class model(object):
                   np.max(predictions_val))
 
             # To stitch back the patches into an entire image
-            val_image_pred = recompose3D_overlap(predictions_val, 240, 240, 48, self.extraction_step[0],
+            val_image_pred = recompose3D_overlap(predictions_val, 220, 220, 48, self.extraction_step[0],
                                                  self.extraction_step[1], self.extraction_step[2])
             val_image_pred = val_image_pred.astype('uint8')
 
@@ -365,8 +365,8 @@ class model(object):
             # Save the predicted image
             save_image(F.results_dir, val_image_pred[0], 148)
 
-            pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 240 * 240 * 48))
-            lab2d = np.reshape(labels_val, (labels_val.shape[0] * 240 * 240 * 48))
+            pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 220 * 220 * 48))
+            lab2d = np.reshape(labels_val, (labels_val.shape[0] * 220 * 220 * 48))
 
             # For printing the validation results
             F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
