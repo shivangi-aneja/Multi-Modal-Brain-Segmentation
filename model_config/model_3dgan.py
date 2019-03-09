@@ -220,7 +220,7 @@ class model(object):
 
     def train(self):
         # Instantiate tensorflow logger
-        self.logger = Logger(model_name='mr_brain', data_name=F.dataset, log_path="tf_logs/"+F.tf_logs)
+        self.logger = Logger(model_name='mr_brain', data_name="mrbrains", log_path="tf_logs/"+F.tf_logs)
 
         # Instantiate the dataset class
         data = dataset_badGAN(num_classes=F.num_classes, extraction_step=self.extraction_step,
