@@ -162,9 +162,9 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
     iter = 0
     for case_idx in range(r1, r2):
         print(case_idx)
-        FLAIR_vols[(case_idx - c - 1), :, :, :] = np.transpose(read_vol(cases[iter], 'FLAIR', dir,mode),[1,2,0])
-        reg_T1_vols[(case_idx - c - 1), :, :, :] = np.transpose(read_vol(cases[iter], 'reg_T1', dir,mode),[1,2,0])
-        label_vols[(case_idx - c - 1), :, :, :] = np.transpose(read_vol(cases[iter], 'segm', dir,mode),[1,2,0])
+        FLAIR_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'FLAIR', dir,mode)
+        reg_T1_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'reg_T1', dir,mode)
+        label_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'segm', dir,mode)
         iter += 1
     # FLAIR_mean = FLAIR_vols.mean()
     # FLAIR_std = FLAIR_vols.std()
@@ -206,7 +206,7 @@ def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir
     for idx in range(len(FLAIR_vols)):
 
         # Extract labels from other labelled patches
-        label_ref = np.transpose(read_vol(train_idx[idx], 'segm', dir, "train"),[1,2,0])
+        label_ref = read_vol(train_idx[idx], 'segm', dir, "train")
 
         x_length = len(x)
         print(("Processing the Image Unlabelled %2d ....") % (idx + 11))
@@ -238,8 +238,8 @@ def preprocess_dynamic_unlab(dir, extraction_step, patch_shape, num_images_train
     reg_T1_vols = np.empty((num_images_training_unlab, 220, 220,48), dtype="float32")
 
     for case_idx in range(len(unlabelled_cases)):
-        FLAIR_vols[case_idx, :, :, :] = np.transpose(read_vol(unlabelled_cases[case_idx], 'FLAIR', dir,"unlabelled"),[1,2,0])
-        reg_T1_vols[case_idx, :, :, :] = np.transpose(read_vol(unlabelled_cases[case_idx], 'T1', dir,"unlabelled"),[1,2,0])
+        FLAIR_vols[case_idx, :, :, :] = read_vol(unlabelled_cases[case_idx], 'FLAIR', dir,"unlabelled")
+        reg_T1_vols[case_idx, :, :, :] = read_vol(unlabelled_cases[case_idx], 'T1', dir,"unlabelled")
         # print(read_vol(case_idx, 'T2', dir).shape)
     # FLAIR_mean = FLAIR_vols.mean()
     # FLAIR_std = FLAIR_vols.std()
