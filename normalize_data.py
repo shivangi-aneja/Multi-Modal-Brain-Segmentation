@@ -70,17 +70,17 @@ def normalize_annotated_images(data_dir, dir_list, dest_dir):
             os.makedirs(os.path.join(dest_dir, dir_name))
 
         # Save the segmentation mask
-        seg_image = nib.Nifti1Image(seg_array, None)
+        seg_image = nib.Nifti1Image(np.transpose(seg_array,[1,2,0]), None)
         imgname = 'segm.nii.gz'
         nib.save(seg_image, os.path.join(os.path.join(dest_dir, dir_name), imgname))
 
         # Save the FLAIR image
-        flair_image = nib.Nifti1Image(flair_array, None)
+        flair_image = nib.Nifti1Image(np.transpose(flair_array,[1,2,0]), None)
         imgname = 'FLAIR.nii.gz'
         nib.save(flair_image, os.path.join(os.path.join(dest_dir, dir_name), imgname))
 
         # Save the T1 image
-        t1_image = nib.Nifti1Image(t1_array, None)
+        t1_image = nib.Nifti1Image(np.transpose(t1_array,[1,2,0]), None)
         imgname = 'reg_T1.nii.gz'
         nib.save(t1_image, os.path.join(os.path.join(dest_dir, dir_name), imgname))
 
@@ -130,12 +130,12 @@ def normalize_unannotated_images(data_dir, dir_list, dest_dir):
             os.makedirs(os.path.join(dest_dir, dir_name))
 
         # Save the FLAIR image
-        flair_image = nib.Nifti1Image(flair_array, None)
+        flair_image = nib.Nifti1Image(np.transpose(flair_array,[1,2,0]), None)
         imgname = 'FLAIR.nii.gz'
         nib.save(flair_image, os.path.join(os.path.join(dest_dir, dir_name), imgname))
 
         # Save the T1 image
-        t1_image = nib.Nifti1Image(t1_array, None)
+        t1_image = nib.Nifti1Image(np.transpose(t1_array,[1,2,0]), None)
         imgname = 'T1.nii.gz'
         nib.save(t1_image, os.path.join(os.path.join(dest_dir, dir_name), imgname))
         print("End " + os.path.join(data_dir, dir_name))
