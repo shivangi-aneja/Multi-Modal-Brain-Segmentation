@@ -132,9 +132,9 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
         r1 = num_images_training + 2
         r2 = num_images_training + num_images_testing + 2
         c = num_images_training + 1
-        FLAIR_vols = np.empty((num_images_testing, 240, 240,48), dtype="float32")
-        reg_T1_vols = np.empty((num_images_testing, 240, 240,48), dtype="float32")
-        label_vols = np.empty((num_images_testing, 240, 240,48), dtype="uint8")
+        FLAIR_vols = np.empty((num_images_testing, 220, 220,48), dtype="float32")
+        reg_T1_vols = np.empty((num_images_testing, 220, 220,48), dtype="float32")
+        label_vols = np.empty((num_images_testing, 220, 220,48), dtype="uint8")
         mode = 'test'
         cases = test_idx
     elif validating:
@@ -142,9 +142,9 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
         r1 = num_images_training + 1
         r2 = num_images_training + 2
         c = num_images_training
-        FLAIR_vols = np.empty((1, 240, 240,48), dtype="float32")
-        reg_T1_vols = np.empty((1, 240, 240,48), dtype="float32")
-        label_vols = np.empty((1, 240, 240,48), dtype="uint8")
+        FLAIR_vols = np.empty((1, 220, 220,48), dtype="float32")
+        reg_T1_vols = np.empty((1, 220, 220,48), dtype="float32")
+        label_vols = np.empty((1, 220, 220,48), dtype="uint8")
         mode = 'val'
         cases = val_idx
     else:
@@ -152,9 +152,9 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
         r1 = 1
         r2 = num_images_training + 1
         c = 0
-        FLAIR_vols = np.empty((num_images_training,240, 240,48), dtype="float32")
-        reg_T1_vols = np.empty((num_images_training, 240, 240,48), dtype="float32")
-        label_vols = np.empty((num_images_training, 240, 240,48), dtype="uint8")
+        FLAIR_vols = np.empty((num_images_training,220, 220,48), dtype="float32")
+        reg_T1_vols = np.empty((num_images_training, 220, 220,48), dtype="float32")
+        label_vols = np.empty((num_images_training, 220, 220,48), dtype="uint8")
         mode = 'train'
         cases = train_idx
 
@@ -166,21 +166,21 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
         reg_T1_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'reg_T1', dir,mode)
         label_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'segm', dir,mode)
         iter += 1
-    FLAIR_mean = FLAIR_vols.mean()
-    FLAIR_std = FLAIR_vols.std()
-    FLAIR_vols = (FLAIR_vols - FLAIR_mean) / FLAIR_std
-    reg_T1_mean = reg_T1_vols.mean()
-    reg_T1_std = reg_T1_vols.std()
-    reg_T1_vols = (reg_T1_vols - reg_T1_mean) / reg_T1_std
-
-    for i in range(FLAIR_vols.shape[0]):
-        FLAIR_vols[i] = ((FLAIR_vols[i] - np.min(FLAIR_vols[i])) /
-                      (np.max(FLAIR_vols[i]) - np.min(FLAIR_vols[i]))) * 255
-    for i in range(reg_T1_vols.shape[0]):
-        reg_T1_vols[i] = ((reg_T1_vols[i] - np.min(reg_T1_vols[i])) /
-                      (np.max(reg_T1_vols[i]) - np.min(reg_T1_vols[i]))) * 255
-    FLAIR_vols = FLAIR_vols / 127.5 - 1.
-    reg_T1_vols = reg_T1_vols / 127.5 - 1.
+    # FLAIR_mean = FLAIR_vols.mean()
+    # FLAIR_std = FLAIR_vols.std()
+    # FLAIR_vols = (FLAIR_vols - FLAIR_mean) / FLAIR_std
+    # reg_T1_mean = reg_T1_vols.mean()
+    # reg_T1_std = reg_T1_vols.std()
+    # reg_T1_vols = (reg_T1_vols - reg_T1_mean) / reg_T1_std
+    #
+    # for i in range(FLAIR_vols.shape[0]):
+    #     FLAIR_vols[i] = ((FLAIR_vols[i] - np.min(FLAIR_vols[i])) /
+    #                   (np.max(FLAIR_vols[i]) - np.min(FLAIR_vols[i]))) * 255
+    # for i in range(reg_T1_vols.shape[0]):
+    #     reg_T1_vols[i] = ((reg_T1_vols[i] - np.min(reg_T1_vols[i])) /
+    #                   (np.max(reg_T1_vols[i]) - np.min(reg_T1_vols[i]))) * 255
+    # FLAIR_vols = FLAIR_vols / 127.5 - 1.
+    # reg_T1_vols = reg_T1_vols / 127.5 - 1.
     x, y = get_patches_lab(FLAIR_vols, reg_T1_vols, label_vols, extraction_step, patch_shape, validating=validating,
                            testing=testing, num_images_training=num_images_training)
     print("Total Extracted Labelled Patches Shape:", x.shape, y.shape)
@@ -200,7 +200,7 @@ To extract labeled patches from array of 3D unlabeled images
 def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir):
     patch_shape_1d = patch_shape[0]
     # Extract patches from input volumes and ground truth
-    label_ref = np.empty((1, 240,240,48), dtype="uint8")
+    label_ref = np.empty((1, 220,220,48), dtype="uint8")
     x = np.zeros((0, patch_shape_1d, patch_shape_1d, patch_shape_1d, 2))
 
     for idx in range(len(FLAIR_vols)):
@@ -234,27 +234,27 @@ To preprocess the unlabeled training data
 
 
 def preprocess_dynamic_unlab(dir, extraction_step, patch_shape, num_images_training_unlab):
-    FLAIR_vols = np.empty((num_images_training_unlab, 240, 240,48), dtype="float32")
-    reg_T1_vols = np.empty((num_images_training_unlab, 240, 240,48), dtype="float32")
+    FLAIR_vols = np.empty((num_images_training_unlab, 220, 220,48), dtype="float32")
+    reg_T1_vols = np.empty((num_images_training_unlab, 220, 220,48), dtype="float32")
 
     for case_idx in range(len(unlabelled_cases)):
         FLAIR_vols[case_idx, :, :, :] = read_vol(unlabelled_cases[case_idx], 'FLAIR', dir,"unlabelled")
         reg_T1_vols[case_idx, :, :, :] = read_vol(unlabelled_cases[case_idx], 'T1', dir,"unlabelled")
         # print(read_vol(case_idx, 'T2', dir).shape)
-    FLAIR_mean = FLAIR_vols.mean()
-    FLAIR_std = FLAIR_vols.std()
-    FLAIR_vols = (FLAIR_vols - FLAIR_mean) / FLAIR_std
-    reg_T1_mean = reg_T1_vols.mean()
-    reg_T1_std = reg_T1_vols.std()
-    reg_T1_vols = (reg_T1_vols - reg_T1_mean) / reg_T1_std
-    for i in range(FLAIR_vols.shape[0]):
-        FLAIR_vols[i] = ((FLAIR_vols[i] - np.min(FLAIR_vols[i])) /
-                      (np.max(FLAIR_vols[i]) - np.min(FLAIR_vols[i]))) * 255
-    for i in range(reg_T1_vols.shape[0]):
-        reg_T1_vols[i] = ((reg_T1_vols[i] - np.min(reg_T1_vols[i])) /
-                      (np.max(reg_T1_vols[i]) - np.min(reg_T1_vols[i]))) * 255
-    FLAIR_vols = FLAIR_vols / 127.5 - 1.
-    reg_T1_vols = reg_T1_vols / 127.5 - 1.
+    # FLAIR_mean = FLAIR_vols.mean()
+    # FLAIR_std = FLAIR_vols.std()
+    # FLAIR_vols = (FLAIR_vols - FLAIR_mean) / FLAIR_std
+    # reg_T1_mean = reg_T1_vols.mean()
+    # reg_T1_std = reg_T1_vols.std()
+    # reg_T1_vols = (reg_T1_vols - reg_T1_mean) / reg_T1_std
+    # for i in range(FLAIR_vols.shape[0]):
+    #     FLAIR_vols[i] = ((FLAIR_vols[i] - np.min(FLAIR_vols[i])) /
+    #                   (np.max(FLAIR_vols[i]) - np.min(FLAIR_vols[i]))) * 255
+    # for i in range(reg_T1_vols.shape[0]):
+    #     reg_T1_vols[i] = ((reg_T1_vols[i] - np.min(reg_T1_vols[i])) /
+    #                   (np.max(reg_T1_vols[i]) - np.min(reg_T1_vols[i]))) * 255
+    # FLAIR_vols = FLAIR_vols / 127.5 - 1.
+    # reg_T1_vols = reg_T1_vols / 127.5 - 1.
     x = get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir)
     print("Total Extracted Unlabelled Patches Shape:", x.shape)
     return x
