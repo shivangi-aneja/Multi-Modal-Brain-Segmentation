@@ -166,7 +166,7 @@ class UNET(object):
     def train(self):
 
         # Instantiate tensorflow logger
-        self.logger = Logger(model_name='mr_brain', data_name=F.dataset, log_path="tf_logs/" + F.tf_logs)
+        self.logger = Logger(model_name='mr_brain', data_name="mrbrains", log_path="tf_logs/" + F.tf_logs)
 
         data = dataset(num_classes=F.num_classes, extraction_step=self.extraction_step, number_images_training=
         F.number_train_images, batch_size=F.batch_size, patch_shape=self.patch_shape, data_directory=F.data_directory)
