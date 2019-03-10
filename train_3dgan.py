@@ -70,7 +70,7 @@ def main(_):
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=FLAGS.gpu_frac)
 
     # Parameters of extracted training and testing patches
-    patch_shape = (16, 16, 16)
+    patch_shape = (32, 32, 32)
     extraction_step = (4, 4, 4)
     testing_extraction_shape = (4, 4, 4)
 
