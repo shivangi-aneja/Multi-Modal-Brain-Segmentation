@@ -78,8 +78,8 @@ def get_patches_lab(FLAIR_vols, reg_T1_vols, label_vols, extraction_step,
                     patch_shape, validating, testing, num_images_training):
     patch_shape_1d = patch_shape[0]
     # Extract patches from input volumes and ground truth
-    x = np.zeros((0, patch_shape_1d, patch_shape_1d, patch_shape_1d, 2), dtype="float32")
-    y = np.zeros((0, patch_shape_1d, patch_shape_1d, patch_shape_1d), dtype="uint8")
+    x = np.zeros((0, patch_shape[0], patch_shape[1], patch_shape[2], 2), dtype="float32")
+    y = np.zeros((0, patch_shape[0], patch_shape[1], patch_shape[2]), dtype="uint8")
     for idx in range(len(FLAIR_vols)):
         y_length = len(y)
         if testing:
@@ -100,10 +100,8 @@ def get_patches_lab(FLAIR_vols, reg_T1_vols, label_vols, extraction_step,
         # Filtering extracted patches
         label_patches = label_patches[valid_idxs]
 
-        x = np.vstack((x, np.zeros((len(label_patches), patch_shape_1d,
-                                    patch_shape_1d, patch_shape_1d, 2), dtype="float32")))
-        y = np.vstack((y, np.zeros((len(label_patches), patch_shape_1d,
-                                    patch_shape_1d, patch_shape_1d), dtype="uint8")))
+        x = np.vstack((x, np.zeros((len(label_patches), patch_shape[0], patch_shape[1], patch_shape[2], 2), dtype="float32")))
+        y = np.vstack((y, np.zeros((len(label_patches), patch_shape[0], patch_shape[1], patch_shape[2]), dtype="uint8")))
 
         y[y_length:, :, :, :] = label_patches
 
@@ -201,7 +199,7 @@ def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir
     patch_shape_1d = patch_shape[0]
     # Extract patches from input volumes and ground truth
     label_ref = np.empty((1, 220,220,48), dtype="uint8")
-    x = np.zeros((0, patch_shape_1d, patch_shape_1d, patch_shape_1d, 2))
+    x = np.zeros((0, patch_shape[0], patch_shape[1], patch_shape[2], 2))
 
     for idx in range(len(FLAIR_vols)):
 
@@ -217,8 +215,8 @@ def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir
         valid_idxs = np.where(np.count_nonzero(label_patches, axis=(1, 2, 3)) > 6000)
 
         label_patches = label_patches[valid_idxs]
-        x = np.vstack((x, np.zeros((len(label_patches), patch_shape_1d,
-                                    patch_shape_1d, patch_shape_1d, 2))))
+        x = np.vstack((x, np.zeros((len(label_patches), patch_shape[0],
+                                    patch_shape[1], patch_shape[2], 2))))
 
         FLAIR_train = extract_patches(FLAIR_vols[idx], patch_shape, extraction_step, datype="float32")
         x[x_length:, :, :, :, 0] = FLAIR_train[valid_idxs]
