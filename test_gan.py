@@ -92,12 +92,12 @@ def test(patch_shape, extraction_step):
         # To load the saved checkpoint
         saver = tf.train.Saver()
         with tf.Session() as sess:
-            try:
-                load_model(F.best_checkpoint_dir, sess, saver)
-                print(" Checkpoint loaded succesfully!....\n")
-            except:
-                print(" [!] Checkpoint loading failed!....\n")
-                return
+            #try:
+            load_model(F.best_checkpoint_dir, sess, saver)
+            print(" Checkpoint loaded succesfully!....\n")
+            #except:
+            print(" [!] Checkpoint loading failed!....\n")
+            #return
 
             # Get patches from test images
             patches_test, labels_test = preprocess_dynamic_lab(F.data_directory,
@@ -128,7 +128,7 @@ def test(patch_shape, extraction_step):
                   np.max(predictions_test))
 
             # To stitch the image back
-            images_pred = recompose3D_overlap(predictions_test, 240, 240, 48, extraction_step[0],
+            images_pred = recompose3D_overlap(predictions_test, 220, 220, 48, extraction_step[0],
                                               extraction_step[1], extraction_step[2])
 
             print("Shape of Predicted Output Groundtruth Images:", images_pred.shape,
@@ -143,8 +143,8 @@ def test(patch_shape, extraction_step):
                 save_image(F.results_dir, images_pred[i], test_idx[i])
 
             # Evaluation
-            pred2d = np.reshape(images_pred, (images_pred.shape[0] * 240 * 240 * 48))
-            lab2d = np.reshape(labels_test, (labels_test.shape[0] * 240 * 240 * 48))
+            pred2d = np.reshape(images_pred, (images_pred.shape[0] * 220 * 220 * 48))
+            lab2d = np.reshape(labels_test, (labels_test.shape[0] * 220 * 220 * 48))
 
             F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
             print("Testing Dice Coefficient.... ")
