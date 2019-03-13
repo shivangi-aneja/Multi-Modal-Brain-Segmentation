@@ -204,7 +204,9 @@ def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir
     for idx in range(len(FLAIR_vols)):
 
         # Extract labels from other labelled patches
-        label_ref = read_vol(train_idx[idx%len(train_idx)], 'segm', dir, "train")
+        value = idx%len(train_idx)
+        print(value)
+        label_ref = read_vol(train_idx[value], 'segm', dir, "train")
 
         x_length = len(x)
         print(("Processing the Image Unlabelled %2d ....") % (idx + 11))
