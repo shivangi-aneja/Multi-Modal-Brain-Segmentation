@@ -196,7 +196,7 @@ To extract labeled patches from array of 3D unlabeled images
 
 
 def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir):
-    patch_shape_1d = patch_shape[0]
+
     # Extract patches from input volumes and ground truth
     label_ref = np.empty((1, 220,220,48), dtype="uint8")
     x = np.zeros((0, patch_shape[0], patch_shape[1], patch_shape[2], 2))
@@ -217,8 +217,9 @@ def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir
         valid_idxs = np.where(np.count_nonzero(label_patches, axis=(1, 2, 3)) > 6000)
 
         label_patches = label_patches[valid_idxs]
-        x = np.vstack((x, np.zeros((len(label_patches), patch_shape[0],
-                                    patch_shape[1], patch_shape[2], 2))))
+        print(x.shape)
+        print(len(label_patches))
+        x = np.vstack((x, np.zeros((len(label_patches), patch_shape[0],patch_shape[1], patch_shape[2], 2))))
 
         FLAIR_train = extract_patches(FLAIR_vols[idx], patch_shape, extraction_step, datype="float32")
         x[x_length:, :, :, :, 0] = FLAIR_train[valid_idxs]
