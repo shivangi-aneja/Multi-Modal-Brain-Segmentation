@@ -203,6 +203,9 @@ def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir
 
     for idx in range(len(FLAIR_vols)):
 
+        if idx == 0:
+            continue
+
         # Extract labels from other labelled patches
         value = idx%len(train_idx)
         print(value)
