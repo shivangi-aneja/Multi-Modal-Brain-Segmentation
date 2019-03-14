@@ -119,7 +119,7 @@ def test(patch_shape, extraction_step):
             for batch in range(total_batches):
                 patches_feed = patches_test[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :, :]
                 preds = sess.run(output, feed_dict={test_patches: patches_feed})
-                predictions_test[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :] = preds
+                predictions_test[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :] += preds
                 print(("Processed_batch:[%8d/%8d]") % (batch, total_batches))
 
             print("All patches Predicted")
@@ -160,14 +160,6 @@ def test(patch_shape, extraction_step):
                 print("Test Image : "+ str(test_idx[i]))
                 dice_score, hausdorff_dist, vol_sim = evaluate(os.path.join(F.results_dir, 'result_'+str(test_idx[i])+'.nii.gz'),
                                                                os.path.join(F.data_directory + "/test/"+str(test_idx[i]), 'segm.nii.gz'))
-                print("Dice Score")
-                print(dice_score)
-
-                print("Hausdorff Distance")
-                print(hausdorff_dist)
-
-                print("Vol Sim")
-                print(vol_sim)
 
 
 
