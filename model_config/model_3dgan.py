@@ -210,7 +210,7 @@ class model(object):
         if F.badGAN:
             self.e_vars = [var for var in t_vars if 'e_' in var.name]
 
-        self.saver = tf.train.Saver()
+        self.saver = tf.train.Saver(max_to_keep=None)
 
     """
     Train function

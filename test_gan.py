@@ -5,10 +5,6 @@ from eval.evaluation_mrbrain import evaluate
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
-from eval.evaluation_metric import evaluate_stats
-
-# sys.path.insert(0, '../preprocess/')
-# sys.path.insert(0, '../lib/')
 
 
 F = tf.app.flags.FLAGS
@@ -158,9 +154,6 @@ def test(patch_shape, extraction_step):
 
             for i in range(F.number_test_images):
                 print("Test Image : "+ str(test_idx[i]))
-                dice_score, hausdorff_dist, vol_sim = evaluate(os.path.join(F.results_dir, 'result_'+str(test_idx[i])+'.nii.gz'),
+                evaluate(os.path.join(F.results_dir, 'result_'+str(test_idx[i])+'.nii.gz'),
                                                                os.path.join(F.data_directory + "/test/"+str(test_idx[i]), 'segm.nii.gz'))
-
-
-
     return
