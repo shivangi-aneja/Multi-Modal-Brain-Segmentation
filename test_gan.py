@@ -1,7 +1,7 @@
 from __future__ import division
 
 from sklearn.metrics import f1_score
-
+from eval.evaluation_mrbrain import evaluate
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
@@ -92,12 +92,12 @@ def test(patch_shape, extraction_step):
         # To load the saved checkpoint
         saver = tf.train.Saver()
         with tf.Session() as sess:
-            #try:
-            load_model(F.best_checkpoint_dir, sess, saver)
-            print(" Checkpoint loaded succesfully!....\n")
-            #except:
-            print(" [!] Checkpoint loading failed!....\n")
-            #return
+            try:
+                load_model(F.best_checkpoint_dir, sess, saver)
+                print(" Checkpoint loaded succesfully!....\n")
+            except:
+                print(" [!] Checkpoint loading failed!....\n")
+                return
 
             # Get patches from test images
             patches_test, labels_test = preprocess_dynamic_lab(F.data_directory,
@@ -138,8 +138,6 @@ def test(patch_shape, extraction_step):
             # To save the images
             test_idx = [7, 14]
             for i in range(F.number_test_images):
-                # pred2d=np.reshape(images_pred[i],(240*240*48))
-                # lab2d=np.reshape(labels_test[i],(240*240*48))
                 save_image(F.results_dir, images_pred[i], test_idx[i])
 
             # Evaluation
@@ -157,6 +155,19 @@ def test(patch_shape, extraction_step):
             print("Ventricles:", F1_score[6])
             print("Cerebellum:", F1_score[7])
             print("Brain stem:", F1_score[8])
+
+            for i in range(F.number_test_images):
+                print("Test Image : "+ str(test_idx[i]))
+                dice_score, hausdorff_dist, vol_sim = evaluate(os.path.join(F.results_dir, 'result_'+str(test_idx[i])+'.nii.gz'),
+                                                               os.path.join(F.data_directory + "/test/"+str(test_idx[i]), 'segm.nii.gz'))
+                print("Dice Score")
+                print(dice_score)
+
+                print("Hausdorff Distance")
+                print(hausdorff_dist)
+
+                print("Vol Sim")
+                print(vol_sim)
 
 
 
