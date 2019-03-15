@@ -143,7 +143,7 @@ def test(patch_shape,extraction_step):
       load_model(F.best_checkpoint_dir, sess, saver)
         #print(" Checkpoint loaded succesfully!....\n")
       #except:
-        print(" [!] Checkpoint loading failed!....\n")
+      print(" [!] Checkpoint loading failed!....\n")
         #return
 
       # Get patches from test images
