@@ -173,7 +173,7 @@ def test(patch_shape,extraction_step):
                                                                         np.max(predictions_test))
 
       #To stitch the image back
-      images_pred = recompose3D_overlap(predictions_test,220, 220, 48, extraction_step[0],
+      images_pred = recompose3D_overlap(predictions_test,240, 240, 48, extraction_step[0],
                                                         extraction_step[1],extraction_step[2])
 
       print("Shape of Predicted Output Groundtruth Images:",images_pred.shape,
@@ -183,13 +183,13 @@ def test(patch_shape,extraction_step):
       # To save the images
       test_idx = [7, 14]
       for i in range(F.number_test_images):
-        # pred2d=np.reshape(images_pred[i],(220*220*48))
-        # lab2d=np.reshape(labels_test[i],(220*220*48))
+        # pred2d=np.reshape(images_pred[i],(240*240*48))
+        # lab2d=np.reshape(labels_test[i],(240*240*48))
         save_image(F.results_dir, images_pred[i], test_idx[i])
 
       # Evaluation
-      pred2d=np.reshape(images_pred,(images_pred.shape[0]*220*220*48))
-      lab2d=np.reshape(labels_test,(labels_test.shape[0]*220*220*48))
+      pred2d=np.reshape(images_pred,(images_pred.shape[0]*240*240*48))
+      lab2d=np.reshape(labels_test,(labels_test.shape[0]*240*240*48))
 
       F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
       print("Testing Dice Coefficient.... ")
