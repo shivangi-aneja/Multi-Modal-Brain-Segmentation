@@ -1,5 +1,6 @@
 from __future__ import division
 from sklearn.metrics import f1_score
+from eval.evaluation_mrbrain import evaluate
 from lib.operations import *
 from lib.utils import *
 from preprocess.preprocess_mrbrains import *
@@ -190,12 +191,22 @@ def test(patch_shape,extraction_step):
       pred2d=np.reshape(images_pred,(images_pred.shape[0]*220*220*48))
       lab2d=np.reshape(labels_test,(labels_test.shape[0]*220*220*48))
 
-      F1_score = f1_score(lab2d, pred2d,[0,1,2,3],average=None)
+      F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
       print("Testing Dice Coefficient.... ")
-      print("Background:",F1_score[0])
-      print("CSF:",F1_score[1])
-      print("GM:",F1_score[2])
-      print("WM:",F1_score[3])
+      print("Background:", F1_score[0])
+      print("Cortical Gray Matter:", F1_score[1])
+      print("Basal ganglia:", F1_score[2])
+      print("White matter:", F1_score[3])
+      print("White matter lesions:", F1_score[4])
+      print("Cerebrospinal fluid in the extracerebral space:", F1_score[5])
+      print("Ventricles:", F1_score[6])
+      print("Cerebellum:", F1_score[7])
+      print("Brain stem:", F1_score[8])
+
+      for i in range(F.number_test_images):
+        print("Test Image : " + str(test_idx[i]))
+        evaluate(os.path.join(F.results_dir, 'result_' + str(test_idx[i]) + '.nii.gz'),
+                 os.path.join(F.data_directory + "/test/" + str(test_idx[i]), 'segm.nii.gz'))
 
   return
 
