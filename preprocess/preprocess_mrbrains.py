@@ -214,7 +214,7 @@ def get_patches_unlab(FLAIR_vols, reg_T1_vols, extraction_step, patch_shape, dir
 
         # Select only those who are important for processing
         # Sampling strategy: reject samples which labels are mostly 0 and have less than 6000 nonzero elements
-        valid_idxs = np.where(np.count_nonzero(label_patches, axis=(1, 2, 3)) > 7000)
+        valid_idxs = np.where(np.count_nonzero(label_patches, axis=(1, 2, 3)) > 6000)
 
         label_patches = label_patches[valid_idxs]
         print(x.shape)
