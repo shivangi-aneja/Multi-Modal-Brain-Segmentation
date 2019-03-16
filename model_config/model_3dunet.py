@@ -269,8 +269,8 @@ class UNET(object):
             save_image(F.results_dir, val_image_pred[0], 148)
 
 
-            pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 240 * 240 * 48))
-            lab2d = np.reshape(labels_val, (labels_val.shape[0] * 240 * 240 * 48))
+            pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 220 * 220 * 48))
+            lab2d = np.reshape(labels_val, (labels_val.shape[0] * 220 * 220 * 48))
             # For printing the validation results
             F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
             print("Validation F1 Score")
