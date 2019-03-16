@@ -181,16 +181,16 @@ def get_hausdorff_distance(lab2d, pred2d):
 
     h_dist = dict()
     for k in range(9):
-        gt_val = np.reshape(np.where(lab2d == k, lab2d, 0), [240, 240, 48])
-        pred_val = np.reshape(np.where(pred2d == k, pred2d, 0), [240, 240, 48])
+        gt_val = np.reshape(np.where(lab2d == k, lab2d, 0), [220, 220, 48])
+        pred_val = np.reshape(np.where(pred2d == k, pred2d, 0), [220, 220, 48])
         # Compute distances from test to result and vice versa.
         dTestToResult = getDistancesFromAtoB(gt_val, pred_val)
         dResultToTest = getDistancesFromAtoB(pred_val, gt_val)
         h_dist[k] = max(np.percentile(dTestToResult, 95), np.percentile(dResultToTest, 95))
 
 
-        # gt_val = np.reshape(np.where(lab2d==k,lab2d,0),[240,240,48])
-        # pred_val = np.reshape(np.where(pred2d==k,pred2d,0),[240,240,48])
+        # gt_val = np.reshape(np.where(lab2d==k,lab2d,0),[220,220,48])
+        # pred_val = np.reshape(np.where(pred2d==k,pred2d,0),[220,220,48])
         # h_dist[k] = max(directed_hausdorff(u=gt_val, v=pred_val)[0],
         #                     directed_hausdorff(u=pred_val, v=gt_val)[0])
     return h_dist

@@ -256,7 +256,7 @@ class UNET(object):
             print("Shape of predictions_val, min and max:", predictions_val.shape, np.min(predictions_val),
                   np.max(predictions_val))
 
-            val_image_pred = recompose3D_overlap(predictions_val, 240, 240, 48, self.extraction_step[0],
+            val_image_pred = recompose3D_overlap(predictions_val, 220, 220, 48, self.extraction_step[0],
                                                  self.extraction_step[1], self.extraction_step[2])
             val_image_pred = val_image_pred.astype('uint8')
 
