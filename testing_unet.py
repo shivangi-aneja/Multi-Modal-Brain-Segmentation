@@ -139,12 +139,12 @@ def test(patch_shape,extraction_step):
     # To load the saved checkpoint
     saver = tf.train.Saver()
     with tf.Session() as sess:
-      #try:
-      load_model(F.best_checkpoint_dir, sess, saver)
-      #   print(" Checkpoint loaded succesfully!....\n")
-      # except:
-      #   print(" [!] Checkpoint loading failed!....\n")
-      #   return
+      try:
+        load_model(F.best_checkpoint_dir, sess, saver)
+        print(" Checkpoint loaded succesfully!....\n")
+      except:
+        print(" [!] Checkpoint loading failed!....\n")
+        return
 
       # Get patches from test images
       patches_test, labels_test = preprocess_dynamic_lab(F.data_directory,
