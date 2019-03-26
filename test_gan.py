@@ -132,7 +132,7 @@ def test(patch_shape, extraction_step):
                   np.mean(images_pred), np.mean(labels_test))
 
             # To save the images
-            test_idx = [7]
+            test_idx = [14]
             #test_idx = [148]
             for i in range(F.number_test_images):
                 save_image(F.results_dir, images_pred[i], test_idx[i])

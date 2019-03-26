@@ -17,7 +17,7 @@ val_idx = [148]
 #val_idx = [1]
 unlabelled_cases = [0,2,4,6,8]
 #unlabelled_cases = [0]
-test_idx = [7]
+test_idx = [148]
 #test_idx = [148]
 
 
