@@ -122,7 +122,7 @@ To preprocess the labelled training data
 
 
 def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_images_training=4,
-                           validating=False, testing=False, num_images_testing=2):
+                           validating=False, testing=False, num_images_testing=1):
     cases = None
     mode = None
 
