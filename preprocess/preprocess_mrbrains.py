@@ -129,7 +129,7 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
     if testing:
         print("Testing")
         r1 = num_images_training + 2
-        r2 = num_images_training + num_images_testing + 2
+        r2 = num_images_training + 1 + 2
         c = num_images_training + 1
         FLAIR_vols = np.empty((num_images_testing, 220, 220,48), dtype="float32")
         reg_T1_vols = np.empty((num_images_testing, 220, 220,48), dtype="float32")
@@ -273,7 +273,7 @@ class dataset(object):
         self.batch_size = batch_size
         self.data_lab, self.label = preprocess_dynamic_lab(
             data_directory, num_classes, extraction_step,
-            patch_shape, number_images_training,num_images_testing=1)
+            patch_shape, number_images_training)
 
         self.data_lab, self.label = shuffle(self.data_lab,
                                             self.label, random_state=0)
@@ -299,8 +299,7 @@ class dataset_badGAN(object):
         # Extract labelled and unlabelled patches,
         self.batch_size = batch_size
 
-        self.data_lab, self.label = preprocess_dynamic_lab(data_directory, num_classes, extraction_step,patch_shape,
-                                                           number_images_training,num_images_testing=1)
+        self.data_lab, self.label = preprocess_dynamic_lab(data_directory, num_classes, extraction_step,patch_shape, number_images_training)
         self.data_lab, self.label = shuffle(self.data_lab, self.label, random_state=0)
 
         self.data_unlab = preprocess_dynamic_unlab(data_directory, extraction_step,
