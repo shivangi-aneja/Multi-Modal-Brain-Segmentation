@@ -17,7 +17,7 @@ val_idx = [148]
 #val_idx = [1]
 unlabelled_cases = [0,2,4,6,8]
 #unlabelled_cases = [0]
-test_idx = [14]
+test_idx = [7, 14]
 #test_idx = [148]
 
 
@@ -129,7 +129,7 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
     if testing:
         print("Testing")
         r1 = num_images_training + 2
-        r2 = num_images_training + 1 + 2
+        r2 = num_images_training + num_images_testing + 2
         c = num_images_training + 1
         FLAIR_vols = np.empty((num_images_testing, 220, 220,48), dtype="float32")
         reg_T1_vols = np.empty((num_images_testing, 220, 220,48), dtype="float32")
@@ -159,7 +159,7 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
 
 
     iter = 0
-    print(r1, r2, c)
+    #print(r1, r2, c)
     for case_idx in range(r1, r2):
         print(case_idx)
         FLAIR_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'FLAIR', dir,mode)
