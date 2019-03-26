@@ -133,7 +133,7 @@ def test(patch_shape, extraction_step):
 
             # To save the images
             #test_idx = [7,14]
-            test_idx = [70]
+            test_idx = [148]
             for i in range(F.number_test_images):
                 save_image(F.results_dir, images_pred[i], test_idx[i])
 
