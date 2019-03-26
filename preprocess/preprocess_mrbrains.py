@@ -122,10 +122,10 @@ To preprocess the labelled training data
 
 
 def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_images_training=4,
-                           validating=False, testing=False, num_images_testing=1):
+                           validating=False, testing=False, num_images_testing=2):
     cases = None
     mode = None
-    print(num_images_testing)
+
     if testing:
         print("Testing")
         r1 = num_images_training + 2
@@ -159,7 +159,6 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
 
 
     iter = 0
-    print(r1,r2,c)
     for case_idx in range(r1, r2):
         print(case_idx)
         FLAIR_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'FLAIR', dir,mode)
@@ -274,7 +273,7 @@ class dataset(object):
         self.batch_size = batch_size
         self.data_lab, self.label = preprocess_dynamic_lab(
             data_directory, num_classes, extraction_step,
-            patch_shape, number_images_training)
+            patch_shape, number_images_training,num_images_testing=1)
 
         self.data_lab, self.label = shuffle(self.data_lab,
                                             self.label, random_state=0)
@@ -300,7 +299,8 @@ class dataset_badGAN(object):
         # Extract labelled and unlabelled patches,
         self.batch_size = batch_size
 
-        self.data_lab, self.label = preprocess_dynamic_lab(data_directory, num_classes, extraction_step,patch_shape, number_images_training)
+        self.data_lab, self.label = preprocess_dynamic_lab(data_directory, num_classes, extraction_step,patch_shape,
+                                                           number_images_training,num_images_testing=1)
         self.data_lab, self.label = shuffle(self.data_lab, self.label, random_state=0)
 
         self.data_unlab = preprocess_dynamic_unlab(data_directory, extraction_step,
