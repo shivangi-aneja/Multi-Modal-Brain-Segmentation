@@ -18,7 +18,7 @@ val_idx = [148]
 unlabelled_cases = [0,2,4,6,8]
 #unlabelled_cases = [0]
 #test_idx = [7, 14]
-test_idx = [70]
+test_idx = [7]
 
 
 def get_filename(set_name, case_idx, input_name, loc):
