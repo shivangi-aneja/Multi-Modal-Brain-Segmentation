@@ -159,6 +159,7 @@ def preprocess_dynamic_lab(dir, num_classes, extraction_step, patch_shape, num_i
 
 
     iter = 0
+    print(r1, r2, c)
     for case_idx in range(r1, r2):
         print(case_idx)
         FLAIR_vols[(case_idx - c - 1), :, :, :] = read_vol(cases[iter], 'FLAIR', dir,mode)
