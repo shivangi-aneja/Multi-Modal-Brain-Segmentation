@@ -4,23 +4,23 @@ import pprint
 
 # Define flags
 flags = tf.app.flags
-flags.DEFINE_integer("epoch", 300, "Number of training epochs (default: 300)")
+flags.DEFINE_integer("epoch", 100, "Number of training epochs (default: 100)")
 flags.DEFINE_float("learning_rate_", 0.0001, "Learning rate of Adam optimizer for Discriminator (default: 0.0001)")
 flags.DEFINE_float("beta1", 0.9, "Momentum term of Adam optimizer for Discriminator (default: 0.5)")
 
 flags.DEFINE_float("gpu_frac", 1.0, "Gpu fraction")
 
-flags.DEFINE_integer("number_train_images", 4, "No. of labeled images for training")
+flags.DEFINE_integer("number_train_images", 5, "No. of labeled images for training")
 flags.DEFINE_integer("gpu", 0, "GPU id")
 flags.DEFINE_integer("number_test_images", 2, "No. of images for testing")
 
 flags.DEFINE_string("data_directory", "data/mrbrains_normalized", "Directory name containing the dataset")
 flags.DEFINE_string("dataset", "mrbrains_normalized", "Dataset name")
-flags.DEFINE_string("checkpoint_dir", "checkpoint/3d_unet_normalized/current", "Directory name to save the checkpoints [checkpoint]")
-flags.DEFINE_string("checkpoint_base", "checkpoint/3d_unet_normalized/epochs", "Directory name to save the checkpoints epochs [checkpoint]")
-flags.DEFINE_string("best_checkpoint_dir", "checkpoint/3d_unet_normalized/best", "Directory name to save the best checkpoints [checkpoint]")
-flags.DEFINE_string("results_dir", "results/3d_unet_normalized/", "Directory name to save the results [results]")
-flags.DEFINE_string("tf_logs", "3d_unet_normalized/", "Directory name to save tensorflow logs")
+flags.DEFINE_string("checkpoint_dir", "checkpoint/3d_unet_normalized_new/current", "Directory name to save the checkpoints [checkpoint]")
+flags.DEFINE_string("checkpoint_base", "checkpoint/3d_unet_normalized_new/epochs", "Directory name to save the checkpoints epochs [checkpoint]")
+flags.DEFINE_string("best_checkpoint_dir", "checkpoint/3d_unet_normalized_new/best", "Directory name to save the best checkpoints [checkpoint]")
+flags.DEFINE_string("results_dir", "results/3d_unet_normalized_new/", "Directory name to save the results [results]")
+flags.DEFINE_string("tf_logs", "3d_unet_normalized_new/", "Directory name to save tensorflow logs")
 
 flags.DEFINE_boolean("load_chkpt", False, "True for loading saved checkpoint")
 flags.DEFINE_boolean("training", False, "True for Training ")
