@@ -7,7 +7,7 @@ from test_gan import test
 
 # Define flags
 flags = tf.app.flags
-flags.DEFINE_integer("epoch", 300, "Number of training epochs (default: 300)")
+flags.DEFINE_integer("epoch", 100, "Number of training epochs (default: 100)")
 flags.DEFINE_float("learning_rate_D", 0.0001, "Learning rate of Adam optimizer for Discriminator (default: 0.0001)")
 flags.DEFINE_float("learning_rate_G", 0.0001, "Learning rate of Adam optimizer for Generator (default: 0.0001)")
 flags.DEFINE_float("learning_rate_E", 0.0001, "Learning rate of Adam optimizer for Encoder (default: 0.0001)")
@@ -27,18 +27,18 @@ flags.DEFINE_integer("number_test_images", 2, "No. of images for testing")
 
 flags.DEFINE_string("data_directory", "data/mrbrains_normalized", "Directory name containing the dataset")
 flags.DEFINE_string("dataset", "mrbrains_normalized", "Dataset name")
-flags.DEFINE_string("checkpoint_dir", "checkpoint/3d_gan_normalized/current", "Directory name to save the checkpoints [checkpoint]")
-flags.DEFINE_string("checkpoint_base", "checkpoint/3d_gan_normalized/epochs", "Directory name to save the checkpoints epochs [checkpoint]")
-flags.DEFINE_string("best_checkpoint_dir", "checkpoint/3d_gan_normalized/best","Directory name to save the best checkpoints [checkpoint]")
-flags.DEFINE_string("results_dir", "results/3d_gan_normalized/", "Directory name to save the results [results]")
-flags.DEFINE_string("tf_logs", "3d_gan_normalized/", "Directory name to save tensorflow logs")
+flags.DEFINE_string("checkpoint_dir", "checkpoint/3d_gan_normalized_new/current", "Directory name to save the checkpoints [checkpoint]")
+flags.DEFINE_string("checkpoint_base", "checkpoint/3d_gan_normalized_new/epochs", "Directory name to save the checkpoints epochs [checkpoint]")
+flags.DEFINE_string("best_checkpoint_dir", "checkpoint/3d_gan_normalized_new/best","Directory name to save the best checkpoints [checkpoint]")
+flags.DEFINE_string("results_dir", "results/3d_gan_normalized_new/", "Directory name to save the results [results]")
+flags.DEFINE_string("tf_logs", "3d_gan_normalized_new/", "Directory name to save tensorflow logs")
 
 flags.DEFINE_boolean("load_chkpt", False, "True for loading saved checkpoint")
 flags.DEFINE_boolean("training", False, "True for Training ")
 flags.DEFINE_boolean("testing", False, "True for Testing ")
 flags.DEFINE_boolean("badGAN", False, "True if you want to run badGAN based model ")
 
-flags.DEFINE_integer("batch_size", 30, "The size of batch images [64]")
+flags.DEFINE_integer("batch_size", 32, "The size of batch images [64]")
 
 flags.DEFINE_integer("num_mod", 2, "Number of modalities of the input 3-D image")
 flags.DEFINE_integer("num_classes", 9, "Number of output classes to segment")
