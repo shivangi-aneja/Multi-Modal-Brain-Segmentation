@@ -181,7 +181,7 @@ def test(patch_shape,extraction_step):
                                                 np.mean(images_pred),np.mean(labels_test))
 
       # To save the images
-      test_idx = [7, 14]
+      test_idx = [1, 14]
       for i in range(F.number_test_images):
         # pred2d=np.reshape(images_pred[i],(220*220*48))
         # lab2d=np.reshape(labels_test[i],(220*220*48))
