@@ -20,7 +20,7 @@ flags.DEFINE_float("tlw", 0.5, "True loss weight")
 flags.DEFINE_float("flw", 0.5, "Fake loss weight")
 flags.DEFINE_float("vi_weight", 0.01, "Weight of variational inference loss")
 
-flags.DEFINE_integer("number_train_images", 4, "No. of labeled images for training")
+flags.DEFINE_integer("number_train_images", 5, "No. of labeled images for training")
 flags.DEFINE_integer("gpu", 0, "GPU id")
 flags.DEFINE_integer("number_train_unlab_images", 5, "No. of unlabeled images for training")
 flags.DEFINE_integer("number_test_images", 2, "No. of images for testing")
