@@ -233,45 +233,45 @@ class UNET(object):
             avg_train_loss = total_train_loss / (idx * 1.0)
             print('\n\n')
 
-            # total_batches = int(patches_val.shape[0] / F.batch_size)
-            # print("Total number of Patches: ", patches_val.shape[0])
-            # print("Total number of Batches: ", total_batches)
-            #
-            # for batch in range(total_batches):
-            #     patches_feed = patches_val[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :, :]
-            #     labels_feed = labels_val_patch[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :]
-            #     feed_dict = {self.patches_labeled: patches_feed,
-            #                  self.labels: labels_feed, self.phase: False}
-            #     preds = self.Val_output.eval(feed_dict)
-            #     val_loss = self.u_loss.eval(feed_dict)
-            #
-            #     predictions_val[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :] = preds
-            #     print(("Validated Patch:[%8d/%8d]") % (batch, total_batches))
-            #     total_val_loss = total_val_loss + val_loss
-            #
-            # avg_val_loss = total_val_loss / (total_batches * 1.0)
-            #
-            # print("All validation patches Predicted")
-            #
-            # print("Shape of predictions_val, min and max:", predictions_val.shape, np.min(predictions_val),
-            #       np.max(predictions_val))
-            #
-            # val_image_pred = recompose3D_overlap(predictions_val, 220, 220, 48, self.extraction_step[0],
-            #                                      self.extraction_step[1], self.extraction_step[2])
-            # val_image_pred = val_image_pred.astype('uint8')
-            #
-            # print("Shape of Predicted Output Groundtruth Images:", val_image_pred.shape,
-            #       np.unique(val_image_pred),
-            #       np.unique(labels_val),
-            #       np.mean(val_image_pred), np.mean(labels_val))
-            #
-            # # Save the predicted image
-            # save_image(F.results_dir, val_image_pred[0], 148)
-            #
-            #
-            # pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 220 * 220 * 48))
-            # lab2d = np.reshape(labels_val, (labels_val.shape[0] * 220 * 220 * 48))
-            # # For printing the validation results
+            total_batches = int(patches_val.shape[0] / F.batch_size)
+            print("Total number of Patches: ", patches_val.shape[0])
+            print("Total number of Batches: ", total_batches)
+
+            for batch in range(total_batches):
+                patches_feed = patches_val[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :, :]
+                labels_feed = labels_val_patch[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :]
+                feed_dict = {self.patches_labeled: patches_feed,
+                             self.labels: labels_feed, self.phase: False}
+                preds = self.Val_output.eval(feed_dict)
+                val_loss = self.u_loss.eval(feed_dict)
+
+                predictions_val[batch * F.batch_size:(batch + 1) * F.batch_size, :, :, :] = preds
+                print(("Validated Patch:[%8d/%8d]") % (batch, total_batches))
+                total_val_loss = total_val_loss + val_loss
+
+            avg_val_loss = total_val_loss / (total_batches * 1.0)
+
+            print("All validation patches Predicted")
+
+            print("Shape of predictions_val, min and max:", predictions_val.shape, np.min(predictions_val),
+                  np.max(predictions_val))
+
+            val_image_pred = recompose3D_overlap(predictions_val, 220, 220, 48, self.extraction_step[0],
+                                                 self.extraction_step[1], self.extraction_step[2])
+            val_image_pred = val_image_pred.astype('uint8')
+
+            print("Shape of Predicted Output Groundtruth Images:", val_image_pred.shape,
+                  np.unique(val_image_pred),
+                  np.unique(labels_val),
+                  np.mean(val_image_pred), np.mean(labels_val))
+
+            # Save the predicted image
+            save_image(F.results_dir, val_image_pred[0], 7)
+
+
+            #pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 220 * 220 * 48))
+            #lab2d = np.reshape(labels_val, (labels_val.shape[0] * 220 * 220 * 48))
+            # For printing the validation results
             # F1_score = f1_score(lab2d, pred2d, [0, 1, 2, 3, 4, 5, 6, 7, 8], average=None)
             # print("Validation F1 Score")
             # print("Background:", F1_score[0])
@@ -283,20 +283,20 @@ class UNET(object):
             # print("Ventricles:", F1_score[6])
             # print("Cerebellum:", F1_score[7])
             # print("Brain stem:", F1_score[8])
-            #
-            # dice_score,hausdorff_dist,vol_sim = evaluate(os.path.join(F.results_dir, 'result_148.nii.gz'), os.path.join(F.data_directory+"/val/148", 'segm.nii.gz'))
-            #
-            # # To save the best model based on validation
-            # if (max_par < (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])):
-            #     max_par = (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])
-            #     save_model(F.best_checkpoint_dir, self.sess, self.saver)
-            #     print("Best checkpoint got updated from validation results.")
+
+            dice_score,hausdorff_dist,vol_sim = evaluate(os.path.join(F.results_dir, 'result_7.nii.gz'), os.path.join(F.data_directory+"/val/7", 'segm.nii.gz'))
+
+            # To save the best model based on validation
+            if (max_par < (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])):
+                max_par = (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])
+                save_model(F.best_checkpoint_dir, self.sess, self.saver)
+                print("Best checkpoint got updated from validation results.")
 
             # To save the losses for plotting
-            #print("Average Validation Loss:", avg_val_loss)
-            #self.logger.log_loss(mode='val_loss', loss=avg_val_loss, epoch=epoch + 1)
+            print("Average Validation Loss:", avg_val_loss)
+            self.logger.log_loss(mode='val_loss', loss=avg_val_loss, epoch=epoch + 1)
             self.logger.log_loss(mode='train_ce', loss=avg_train_loss, epoch=epoch + 1)
-            #self.logger.log_segmentation_metrics(mode='scores', dice_score=dice_score, hausdorff_dist= hausdorff_dist,
-             #                                    vol_sim=vol_sim, epoch=epoch + 1)
+            self.logger.log_segmentation_metrics(mode='scores', dice_score=dice_score, hausdorff_dist= hausdorff_dist,
+                                                vol_sim=vol_sim, epoch=epoch + 1)
 
         return
