@@ -266,7 +266,7 @@ class UNET(object):
                   np.mean(val_image_pred), np.mean(labels_val))
 
             # Save the predicted image
-            save_image(F.results_dir, val_image_pred[0], 4)
+            save_image(F.results_dir, val_image_pred[0], 5)
 
 
             #pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 220 * 220 * 48))
@@ -284,7 +284,7 @@ class UNET(object):
             # print("Cerebellum:", F1_score[7])
             # print("Brain stem:", F1_score[8])
 
-            dice_score,hausdorff_dist,vol_sim = evaluate(os.path.join(F.results_dir, 'result_4.nii.gz'), os.path.join(F.data_directory+"/val/4", 'segm.nii.gz'))
+            dice_score,hausdorff_dist,vol_sim = evaluate(os.path.join(F.results_dir, 'result_5.nii.gz'), os.path.join(F.data_directory+"/val/5", 'segm.nii.gz'))
 
             # To save the best model based on validation
             if (max_par < (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])):
