@@ -362,7 +362,7 @@ class model(object):
                   np.mean(val_image_pred), np.mean(labels_val))
 
             # Save the predicted image
-            save_image(F.results_dir, val_image_pred[0], 5)
+            save_image(F.results_dir, val_image_pred[0], 70)
 
             #pred2d = np.reshape(val_image_pred, (val_image_pred.shape[0] * 220 * 220 * 48))
             #lab2d = np.reshape(labels_val, (labels_val.shape[0] * 220 * 220 * 48))
@@ -380,8 +380,8 @@ class model(object):
             # print("Cerebellum:", F1_score[7])
             # print("Brain stem:", F1_score[8])
 
-            dice_score, hausdorff_dist, vol_sim = evaluate(os.path.join(F.results_dir, 'result_5.nii.gz'),
-                                                           os.path.join(F.data_directory + "/val/5", 'segm.nii.gz'))
+            dice_score, hausdorff_dist, vol_sim = evaluate(os.path.join(F.results_dir, 'result_70.nii.gz'),
+                                                           os.path.join(F.data_directory + "/val/70", 'segm.nii.gz'))
 
             # To Save the best model
             if (max_par < (dice_score[1] + dice_score[2] + dice_score[3] + dice_score[4] + dice_score[5] + dice_score[6] + dice_score[7] + dice_score[8])):
