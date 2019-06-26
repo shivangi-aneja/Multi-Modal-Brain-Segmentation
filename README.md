@@ -27,6 +27,8 @@ $ python normalize_data.py
 
 ## 3D U-Net
 
+The architecture of 3D Unet used is shown in the figure below.
+
 <p float="center">
   <img src="/images/unet.png" width="50%%" />
 </p>
@@ -47,35 +49,32 @@ $ python train_3dunet.py --training
 ```
 $ python train_3dunet.py--testing
 ```
-* This version of code only compute dice coefficient to evaluate the testing performance.( Once the output segmented images are created you can use them to compute any other evaluation metric)
-* Note that the U-Net used here is modified according to the U-Net used in proposed model.(To stabilise the GAN training)
-* To use the original U-Net you need to change the replace network_dis with network(both networks are provided) in build_model function of class U-Net(in model_unet.py). 
- 
-### How to run GAN based 3D U-Net?
+* This code computes dice coefficient to evaluate the testing performance. Once the output segmented images are created you can use them to compute any other evaluation metrics : Hausdorff Distance and Volumetric Similarity
+
+## 3D GAN
+
+The architecture of 3D GAN is inspired from [1] and shown in figure below.
+<p float="center">
+  <img src="/images/gan.png" width="800px" />
+</p>
+
+### How to run 3D GAN?
 ```
 $ cd multi_modal_gan
 ```
 * Configure the flags according to your experiment.
 * To run training
 ```
-$ python main.py --training
+$ python train_3dgan.py --training
 ```
 * By default it trains Feature Matching GAN based model. To train the bad GAN based model
 ```
-$ python main.py --training --badGAN
+$ python train_3dgan.py --training --badGAN
 ```
 * To run testing
 ```
-$ python main.py --testing
+$ python train_3dgan.py --testing
 ``` 
-* Once you run both the model you can compare the difference between their perfomance when 1 or 2 training images are available. 
-
-## Proposed model architecture
-The following shows the model architecture of the proposed model. (Read our paper for further details)
-
-<br>
-<img src="https://github.com/arnab39/FewShot_GAN-Unet3D/blob/master/images/Diagram.jpg" width="800"/>
-<br>
 
 ## Some results from our paper
 
@@ -95,5 +94,4 @@ The following shows the model architecture of the proposed model. (Read our pape
 You can mail me at: sanu.arnab@gmail.com  
 If you use this code for your research, please consider citing the original paper:
 
-- Arnab Kumar Mondal, Jose Dolz, Christian Desrosiers. [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/abs/1810.12241), submitted in Medical Image Analysis, October 2018.
-
+- [1] [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/abs/1810.12241)
