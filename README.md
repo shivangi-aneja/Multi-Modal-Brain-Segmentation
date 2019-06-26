@@ -124,7 +124,7 @@ The training curves are shown in the figure below
 </p>
 
 
-                  3D UNET               |             3D GAN               |             Ground Truth               
+|                  3D UNET               |             3D GAN               |             Ground Truth       |        
 | ---------------- | --------------- | --------------------- |
 
 ## Contact
