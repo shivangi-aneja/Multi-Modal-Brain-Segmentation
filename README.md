@@ -122,6 +122,8 @@ The training curves are shown in the figure below
   <img src="/images/14_gan.png" width="29%" /> 
   <img src="/images/14_gt.png" width="29%" /> 
 </p>
+
+
 |     3D UNET      |      3D GAN     |     Ground Truth      |
 | ---------------- | --------------- | --------------------- |
 
