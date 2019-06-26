@@ -1,6 +1,5 @@
 data/*
 .idea/*
-images/*
 *.pyc
 !.gitkeep
 checkpoint/*
