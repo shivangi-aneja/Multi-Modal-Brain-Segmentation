@@ -123,10 +123,10 @@ The training curves are shown in the figure below
   <img src="/images/14_gt.png" width="29%" /> 
 </p>
 
-<pre>
+
 |                  3D UNET               |             3D GAN               |             Ground Truth       |        
-| ---------------- | --------------- | --------------------- |
-<pre>
+| -------------------------------------- | -------------------------------- | ------------------------------ |
+
 ## Contact
 You can mail me at: shivangi.tum@gmail.com  
 
