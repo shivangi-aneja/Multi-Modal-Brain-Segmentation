@@ -76,22 +76,54 @@ $ python train_3dgan.py --training --badGAN
 $ python train_3dgan.py --testing
 ``` 
 
-## Some results from our paper
+## Results
 
-* Visual comparison of the segmentation by each model, for two test subjects of the iSEG-2017 dataset, when training with different numbers of labeled examples.
+#### Loss Curves
+The training curves are shown in the figure below
+
 <p float="left">
-  <img src="https://github.com/arnab39/FewShot_GAN-Unet3D/blob/master/images/Subject9.jpg" width="420" />
-  <img src="https://github.com/arnab39/FewShot_GAN-Unet3D/blob/master/images/Subject10.jpg" width="420" /> 
+  <img src="/images/1_supervised_loss.png" width="24%" />
+  <img src="/images/feature_match_loss.png" width="24%" /> 
+  <img src="/images/fk_img_loss.png" width="24%" /> 
+  <img src="/images/unsupervised_loss.png" width="24%" /> 
 </p>
 
-* Segmentation of Subject 10 of the iSEG-2017 dataset predicted by different GAN-based models, when trained with 2 labeled images. The red box highlights a region in the ground truth where all these models give noticeable differences.
-<br>
-<img src="https://github.com/arnab39/FewShot_GAN-Unet3D/blob/master/images/ganwar_mod.jpg" width="820"/>
-<br>
-* More such results can be found in the paper.
+
+#### Dice Score Comparison over epochs on Validation Set
+
+<p float="left">
+  <img src="/images/1_basal_dice.png" width="29%" />
+  <img src="/images/1_basal_ganglia_dice.png" width="29%" /> 
+  <img src="/images/1_brain_stem_dice.png" width="29%" /> 
+</p>
+
+<p float="left">
+  <img src="/images/1_cerebellum_dice.png" width="29%" />
+  <img src="/images/1_cerebrospinal_fluid_dice.png" width="29%" /> 
+  <img src="/images/1_cortical_gray_matter_dice.png" width="29%" /> 
+</p>
+
+<p float="left">
+  <img src="/images/1_ventricles_dice.png" width="29%" />
+  <img src="/images/1_white_matter_dice.png" width="29%" /> 
+  <img src="/images/1_white_matter_lesions_dice.png" width="29%" /> 
+</p>
+
+
+#### Visual comparison of the segmentation by 3D Unet vs 3D GAN
+<p float="left">
+  <img src="/images/1_unet.png" width="29%" />
+  <img src="/images/1_gan.png" width="29%" /> 
+  <img src="/images/1_gt.png" width="29%" /> 
+</p>
+
+<p float="left">
+  <img src="/images/14_unet.png" width="29%" />
+  <img src="/images/14_gan.png" width="29%" /> 
+  <img src="/images/14_gt.png" width="29%" /> 
+</p>
 
 ## Contact
-You can mail me at: sanu.arnab@gmail.com  
-If you use this code for your research, please consider citing the original paper:
+You can mail me at: shivangi.tum@gmail.com  
 
-- [1] [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/abs/1810.12241)
+[1] [Few-shot 3D Multi-modal Medical Image Segmentation using Generative Adversarial Learning](https://arxiv.org/abs/1810.12241)
