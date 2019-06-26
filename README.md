@@ -118,7 +118,7 @@ The training curves are shown in the figure below
 </p>
 
 <p float="left">
-  <img src="/images/14_unet.png" width="29%" />
+  ![3D UNET](<img src="/images/14_unet.png" width="29%" />)
   <img src="/images/14_gan.png" width="29%" /> 
   <img src="/images/14_gt.png" width="29%" /> 
 </p>
