@@ -1,4 +1,7 @@
-# Brain Structure Segmentation using Adversarial Learning
+# 3D Multi Modal Brain Structure Segmentation using Adversarial Learning
+
+This work has been accepted at 14th WiML Workshop, NeurIPS Conference 2019. Please find the attached poster [here](https://www.academia.edu/40950224/3D_Multi_Modal_Semantic_Segmentation_Using_Adversarial_Learning).
+
 ## Requirements
 
 - The code has been written in Python (3.5.2) and Tensorflow (1.7.0)
@@ -53,7 +56,7 @@ $ python train_3dunet.py--testing
 
 ## 3D GAN
 
-The architecture of 3D GAN is inspired from [1] and shown in figure below.
+The architecture of 3D GAN used is shown in figure below. Parts of code are referenced from [1].
 <p float="center">
   <img src="/images/gan.png" width="800px" />
 </p>
