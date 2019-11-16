@@ -1,6 +1,6 @@
 # 3D Multi Modal Brain Structure Segmentation using Adversarial Learning
 
-This work has been accepted at 14th WiML Workshop, NeurIPS Conference 2019. Please find the attached poster [here](https://www.academia.edu/40950224/3D_Multi_Modal_Semantic_Segmentation_Using_Adversarial_Learning).
+This work has been accepted at 14th WiML Workshop, NeurIPS Conference 2019. Please find the poster [here](https://www.academia.edu/40950224/3D_Multi_Modal_Semantic_Segmentation_Using_Adversarial_Learning).
 
 ## Requirements
 
