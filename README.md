@@ -26,7 +26,7 @@ consists of brain MR images (T1 and T2-FLAIR). So we used only two modalities fo
 $ python normalize_data.py
 ```
 * The preprocessed images will be stored in mrbrains_normalized folder
-* You can run standard 3D U-Net & 3D GAN (both Feature matching GAN and bad GAN) with this code and compare their performance.
+* You can run standard 3D U-Net(baseline) & 3D GAN with this code.
 
 ## 3D U-Net
 
@@ -46,7 +46,6 @@ $ cd multi_modal_gan
 $ python train_3dunet.py --training
 ```
 * This will train your model and save the best checkpoint according to your validation performance. 
-* You can also resume training from saved checkpoint by setting the load_chkpt flag.
 * You can run the testing to predict segmented output which will be saved in your result folder as ".nii.gz" files.
 * To run testing
 ```
@@ -56,7 +55,7 @@ $ python train_3dunet.py--testing
 
 ## 3D GAN
 
-The architecture of 3D GAN used is shown in figure below. Parts of code are referenced from [1].
+The architecture of 3D GAN used is shown in figure below. Parts of code are referenced from [here](https://github.com/arnab39/FewShot_GAN-Unet3D).
 <p float="center">
   <img src="/images/gan.png" width="800px" />
 </p>
