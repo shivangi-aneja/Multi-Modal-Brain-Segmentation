@@ -4,8 +4,8 @@ This work has been accepted at 14th WiML Workshop, NeurIPS Conference 2019. Plea
 
 ## Requirements
 
-- The code has been written in Python (3.5.2) and Tensorflow (1.7.0)
-- Make sure to install all the libraries given in requirement.txt (You can do so by the following command)
+- The code has been written in Python and Tensorflow
+- Install all the libraries given in requirement.txt (You can do so by the following command)
 ```
 pip install -r requirement.txt
 ```
